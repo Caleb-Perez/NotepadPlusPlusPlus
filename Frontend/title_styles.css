@@ -1,0 +1,160 @@
+.Welcomepage {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: black;
+}
+
+.Ellipse {
+    width: 60vw;
+    height: 20vw;
+    left: 10vw;
+    top: 20vh;
+    position: absolute;
+    mix-blend-mode: screen;
+    background: #0779AA;
+    box-shadow: 30vw 30vw 30vw;
+    border-radius: 9999px;
+    filter: blur(30vw);
+}
+
+.Rectangle {
+    width: 40vw;
+    height: 30vw;
+    left: 8vw;
+    top: 40vh;
+    position: absolute;
+    transform: rotate(-90deg);
+    transform-origin: 0 0;
+    background: conic-gradient(from 180deg at -3.31% 287.64%, #0375A6 2deg, #012D40 76deg, rgba(23.77, 19.25, 26.25, 0.13) 121deg, rgba(7, 22, 18, 0) 301deg, rgba(0, 0, 0, 0) 350deg, rgba(6, 122, 173, 0.18) 358deg);
+}
+
+.RectangleMHorizontal {
+    width: 40vw;
+    height: 25vw;
+    left: 80vw;
+    top: 40vh;
+    position: absolute;
+    transform: rotate(-90.06deg);
+    transform-origin: 0 0;
+    background: conic-gradient(from 180deg at -3.31% 287.64%, #0375A6 2deg, #012D40 76deg, rgba(23.77, 19.25, 26.25, 0.13) 121deg, rgba(7, 22, 18, 0) 301deg, rgba(0, 0, 0, 0) 350deg, rgba(6, 122, 173, 0.18) 358deg);
+}
+.Rectangle.LargeRectangle {
+    width: 80vw;
+    height: 60vh;
+    left: 0;
+    top: 5vh;
+    background: rgba(0, 0, 0, 0.1); 
+    box-shadow: 5vw 5vw 5vw;
+    filter: blur(5vw);
+    backdrop-filter: blur(10vw);
+}
+
+
+
+.TopBar {
+    width: 100vw;
+    height: 5vh;
+    position: absolute;
+    background: #1A1E1F;
+}
+
+.WindowOptions {
+    width: 10vw;
+    height: 5vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    right: 0;
+    top: 0;
+    position: absolute;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2vw;
+}
+
+.Rectangle1 {
+    width: 1vw;
+    height: 1px;
+    background: #C4CBDA;
+    border-radius: 5px;
+}
+
+.Group1 {
+    width: 1vw;
+    height: 1vw;
+    position: relative;
+}
+
+.Vector1 {
+    width: 0.7vw;
+    height: 0.6vw;
+    left: 0.15vw;
+    top: 0;
+    position: absolute;
+    border-radius: 1px;
+    border: 1px #C4CBDA solid;
+}
+
+.Rectangle2 {
+    width: 0.8vw;
+    height: 0.8vw;
+    left: 0;
+    top: 0.15vw;
+    position: absolute;
+    border-radius: 2px;
+    border: 1px #C4CBDA solid;
+}
+
+.Group2 {
+    width: 1vw;
+    height: 1vw;
+    position: relative;
+}
+
+.Vector3, .Vector2 {
+    width: 1vw;
+    height: 1vw;
+    left: 0;
+    top: 0;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px #C4CBDA solid;
+}
+
+.Notepad {
+    width: 20vw;
+    height: 5vh;
+    left: 1vw;
+    top: 0.5vh;
+    position: absolute;
+    color: white;
+    font-size: 2vh;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    word-wrap: break-word;
+}
+
+.WelcomeToNotepad {
+    width: 50vw; 
+    height: 20vh;
+    left: 25vw;
+    top: 40vh;
+    position: absolute;
+    text-align: center;
+    color: white;
+    font-size: 5vh;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    line-height: 6vh;
+    word-wrap: break-word;
+}
+
+.BottomBar {
+    width: 100vw;
+    height: 5vh;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+    background: #1A1E1F;
+}
