@@ -32,3 +32,87 @@ document.addEventListener('DOMContentLoaded', function () {
         URL.revokeObjectURL(url);
     });
 });
+
+const menus = document.querySelectorAll('.menu');
+
+menus.forEach(menu => {
+    menu.addEventListener('click', function (event) {
+        event.stopPropagation();
+        menus.forEach(m => {
+            if (m !== menu) {
+                m.classList.remove('active');
+            }
+        });
+        menu.classList.toggle('active');
+    });
+});
+
+document.addEventListener('click', function () {
+    menus.forEach(menu => {
+        menu.classList.remove('active');
+    });
+});
+
+
+const tabsContainer = document.querySelector('.editor-tabs');
+tabsContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('close-tab')) {
+        const tab = event.target.parentElement;
+        tab.remove();
+    }
+});
+
+const addTabButton = document.querySelector('.add-tab');
+let currentTab = null;
+const files = {};
+
+tabsContainer.addEventListener('click', function (event) {
+    const target = event.target;
+
+    if (target.classList.contains('close-tab')) {
+        const tab = target.parentElement;
+        const tabName = tab.dataset.name;
+        delete files[tabName];
+        tab.remove();
+        if (currentTab === tabName) {
+            const remainingTabs = tabsContainer.querySelectorAll('.tab:not(.add-tab)');
+            if (remainingTabs.length > 0) {
+                const newTab = remainingTabs[0];
+                setActiveTab(newTab.dataset.name);
+            } else {
+                currentTab = null;
+                textEditor.value = '';
+            }
+        }
+    } else if (target.classList.contains('tab') || target.parentElement.classList.contains('tab')) {
+        const tab = target.classList.contains('tab') ? target : target.parentElement;
+        setActiveTab(tab.dataset.name);
+    }
+});
+
+addTabButton.addEventListener('click', function () {
+    let newTabName = `NewFile${Object.keys(files).length + 1}.txt`;
+    let count = 1;
+    while (files[newTabName]) {
+        newTabName = `NewFile${Object.keys(files).length + count}.txt`;
+        count++;
+    }
+    addTab(newTabName);
+    setActiveTab(newTabName);
+});
+
+function addTab(name) {
+    const tab = document.createElement('div');
+    tab.classList.add('tab');
+    tab.dataset.name = name;
+    tab.innerHTML = `${name} <span class="close-tab">x</span>`;
+    tabsContainer.insertBefore(tab, addTabButton);
+    files[name] = '';
+}
+
+function setActiveTab(name) {
+    currentTab = name;
+    const tabs = tabsContainer.querySelectorAll('.tab');
+    tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.name === name));
+    textEditor.value = files[name] || '';
+}

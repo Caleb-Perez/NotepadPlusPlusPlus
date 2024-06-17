@@ -1,37 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad+++</title>
     <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
     <div class="notepad-container">
         <div class="top-bar">
             <div class="title">Notepad+++</div>
             <div class="menu-bar">
-                <div class="menu">File</div>
-                <div class="menu">View</div>
-                <div class="menu">Language</div>
-                <div class="menu">Help</div>
+                <div class="menu">
+                    File
+                    <ul class="dropdown">
+                        <li class="menu-file-new">New</li>
+                        <li class="menu-file-open">Open</li>
+                        <li class="menu-file-save">Save</li>
+                        <li>Exit</li>
+                    </ul>
+                </div>
+                <div class="menu">
+                    View
+                    <ul class="dropdown">
+                        <li>Zoom In</li>
+                        <li>Zoom Out</li>
+                        <li>Full Screen</li>
+                    </ul>
+                </div>
+                <div class="menu">
+                    Language
+                    <ul class="dropdown">
+                        <li>Python</li>
+                        <li>JavaScript</li>
+                        <li>C++</li>
+                        <li>Java</li>
+                    </ul>
+                </div>
+                <div class="menu">
+                    Help
+                    <ul class="dropdown">
+                        <li>Documentation</li>
+                        <li>About</li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="editor-tabs">
-            <div class="tab">Test1.cpp</div>
-            <div class="tab">Test2.txt</div>
-            <div class="tab">+</div>
+            <div class="tab">
+                Test1.cpp
+                <span class="close-tab">x</span>
+            </div>
+            <div class="tab">
+                Test2.txt
+                <span class="close-tab">x</span>
+            </div>
+            <div class="tab add-tab">+</div>
         </div>
         <textarea id="text-editor" placeholder="Type your text here..."></textarea>
-    <script src="script.js"></script>
-            
         <div class="status-bar">
             <span>Line: 1</span>
             <span>Col: 1</span>
             <span>UTF-8</span>
         </div>
     </div>
+    <script src="script.js"></script>
 </body>
-</html>
 
+</html>
