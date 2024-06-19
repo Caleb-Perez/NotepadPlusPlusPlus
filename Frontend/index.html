@@ -1,72 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad+++</title>
     <link rel="stylesheet" href="index.css">
 </head>
-
 <body>
-    <div class="notepad-container">
-        <div class="top-bar">
-            <div class="title">Notepad+++</div>
-            <div class="menu-bar">
-                <div class="menu">
-                    File
-                    <ul class="dropdown">
-                        <li class="menu-file-new">New</li>
-                        <li class="menu-file-open">Open</li>
-                        <li class="menu-file-save">Save</li>
-                        <li>Exit</li>
-                    </ul>
-                </div>
-                <div class="menu">
-                    View
-                    <ul class="dropdown">
-                        <li>Zoom In</li>
-                        <li>Zoom Out</li>
-                        <li>Full Screen</li>
-                    </ul>
-                </div>
-                <div class="menu">
-                    Language
-                    <ul class="dropdown">
-                        <li>Python</li>
-                        <li>JavaScript</li>
-                        <li>C++</li>
-                        <li>Java</li>
-                    </ul>
-                </div>
-                <div class="menu">
-                    Help
-                    <ul class="dropdown">
-                        <li>Documentation</li>
-                        <li>About</li>
-                    </ul>
-                </div>
-            </div>
+    <div class="title-bar">
+        <div class="title">Notepad+++</div>
+        <div class="window-controls">
+            <button class="minimize" onclick="minimizeWindow()">&#x2013;</button>
+            <button class="maximize" onclick="maximizeWindow()">&#9744;</button>
+            <button class="close" onclick="closeWindow()">&#10005;</button>
         </div>
-        <div class="editor-tabs">
-            <div class="tab">
-                Test1.cpp
-                <span class="close-tab">x</span>
+    </div>
+    <div class="container">
+        <main>
+            <div class="welcome-text">
+                <h1>Start</h1>
+                <h2>Here</h2>
             </div>
-            <div class="tab">
-                Test2.txt
-                <span class="close-tab">x</span>
+            <div class="buttons">
+                <button id="open-file" onclick="openFile()">
+                    <span class="icon">📂</span> Open file
+                </button>
+                <button id="create-new" onclick="createNewFile()">
+                    <span class="icon">➕</span> Create New
+                </button>
             </div>
-            <div class="tab add-tab">+</div>
-        </div>
-        <textarea id="text-editor" placeholder="Type your text here..."></textarea>
-        <div class="status-bar">
-            <span>Line: 1</span>
-            <span>Col: 1</span>
-            <span>UTF-8</span>
-        </div>
+        </main>
     </div>
     <script src="script.js"></script>
 </body>
-
 </html>
+
