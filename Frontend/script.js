@@ -116,3 +116,8 @@ function setActiveTab(name) {
     tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.name === name));
     textEditor.value = files[name] || '';
 }
+
+function createNewFile() {
+    const popup = document.getElementById('pop-up');
+    popup.classList.add('open-popup');
+}
