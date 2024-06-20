@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const textEditor = document.getElementById('text-editor');
-
+    
     textEditor.addEventListener('input', function () {
         console.log('Text changed:', textEditor.value);
         

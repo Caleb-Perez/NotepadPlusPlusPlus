@@ -121,3 +121,26 @@ function createNewFile() {
     const popup = document.getElementById('pop-up');
     popup.classList.add('open-popup');
 }
+
+function openFile() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.txt, .cpp, .py, .js' // add the file it can accept
+    fileInput.style.display = 'none';
+
+    document.body.appendChild(fileInput);
+    fileInput.click();
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            console.log('Selected file:', file.name);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileContent = e.target.result;
+                console.log('File content:', fileContent);
+            };
+            reader.readAsText(file);
+        }
+        document.body.removeChild(fileInput);
+    });
+}
