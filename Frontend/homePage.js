@@ -117,16 +117,27 @@ function setActiveTab(name) {
     textEditor.value = files[name] || '';
 }
 
+//open pop up
 function createNewFile() {
     const popup = document.getElementById('pop-up');
+    const container = document.getElementById('container');
     popup.classList.add('open-popup');
+    container.classList.add('blur'); //come back to this 
+}
+
+//to close pop up
+function closePopup(){
+    const popup = document.getElementById('pop-up');
+    const container = document.getElementById('container');
+    popup.classList.remove('open-popup');
+    container.classList.remove('blur');//come back to this 
+    
 }
 
 function openFile() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = '.txt, .cpp, .py, .js' // add the file it can accept
-    fileInput.style.display = 'none';
 
     document.body.appendChild(fileInput);
     fileInput.click();
@@ -138,6 +149,8 @@ function openFile() {
             reader.onload = function(e) {
                 const fileContent = e.target.result;
                 console.log('File content:', fileContent);
+                //have to add the connection to text editor
+                window.location.href = "text.html"
             };
             reader.readAsText(file);
         }
