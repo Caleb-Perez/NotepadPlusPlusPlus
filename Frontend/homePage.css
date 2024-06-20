@@ -14,7 +14,6 @@ body {
     color: #fff;
     padding: 0 10px;
     height: 30px;
-    -webkit-app-region: drag;
 }
 
 .title-bar .title {
@@ -35,7 +34,6 @@ body {
     font-size: 16px;
     width: 40px;
     height: 30px;
-    -webkit-app-region: no-drag;
 }
 
 .window-controls button:hover {
@@ -46,7 +44,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: calc(100vh - 30px);
+    height: 100vh;
     padding: 20px;
 }
 
@@ -82,8 +80,8 @@ button {
     display: flex;
     align-items: center;
     font-size: 18px;
-    margin: 10px 0;
-    padding: 10px 20px;
+    margin: 10px;
+    padding: 10px;
     width: 200px;
 }
 
