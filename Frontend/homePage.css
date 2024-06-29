@@ -26,8 +26,80 @@ body {
     margin-left: 10px;
 }
 
+
+
+.editor-tabs {
+    display:flex;
+    height:100%;
+    
+    
+    
+    
+}
+
+.tab {
+   margin: 0;
+   padding: 0 10px;
+   display: flex;
+   align-items: center;
+   background: #5e6567;
+   height:100%;
+   border-top-left-radius: 10px;
+   border-top-right-radius: 10px;
+   cursor: pointer;
+   position: relative;
+   border-right: 1px solid #5e6567;
+    
+
+   
+}
+
+.tab:hover,
+.tab:focus,
+.tab.active {
+   background: #5e6567;;
+}
+
+.close-tab {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background-color: #ff4c4c;
+    color: #ffffff;
+    border: none;
+    padding: 2px 6px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    display: none;
+}
+
+.tab:hover .close-tab {
+    display: inline-block;
+}
+
+.add-tab {
+    margin: 0;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    background: #5e6567;
+    height:100%;
+    cursor: pointer;
+    background: #5e6567;
+    border-right: 1px solid #5e6567;
+    
+}
+
+.add-tab:hover,
+.add-tab:focus {
+    background: #555;
+}
+
+
 .window-controls {
     display: flex;
+    align-items: center;
 }
 
 .window-controls button {
