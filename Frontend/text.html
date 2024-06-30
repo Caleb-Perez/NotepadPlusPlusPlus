@@ -10,7 +10,70 @@
 </head>
 
 <body>
+    <div class="title-bar">
+        
+        <div class="editor-tabs">
+            <span class="logo">👽 </span>
+            <div class="tab">
+                <div class="tab-title">New Tab</div>
+                <span class="close-tab">x</span>
+            </div>
+            <div class="tab add-tab">+</div>
+        </div>
+          
+       
+        <div class="window-controls">
+            <button class="minimize" onclick="minimizeWindow()">&#x2013;</button> <!-- &#x2013; is the unicode for the horizontal line character -->
+            <button class="maximize" onclick="maximizeWindow()">&#9744;</button> <!-- &#9744; is the unicode for the square character -->
+            <button class="close" onclick="closeWindow()">&#10005;</button> <!-- &#10005; is the unicode for the cross character -->
+        </div>
+    </div>
+    <header class="second-top-bar">
+        <nav class="menu-bar">
+            <div class="menu">
+                <div class="title">File</div>
+                <ul class="dropdown">
+                    <li>New</li>
+                    <li class="menu-file-open">Open</li>
+                    <li class="menu-file-save">Save</li>
+                    <li>Exit</li>
+                </ul>
+            </div>
+
+            <div class="menu">
+                <div class="title">View</div>
+                <ul class="dropdown">
+                    <li>Zoom In</li>
+                    <li>Zoom Out</li>
+                    <li>Full Screen</li>
+                </ul>
+            </div>
+
+            <div class = "menu">
+                <div class="title">Language</div>
+                <ul class="dropdown">
+                    <li>Python</li>
+                    <li>JavaScript</li>
+                    <li>C++</li>
+                    <li>Java</li>
+                </ul>
+            </div>
+
+            <div class = "menu"> 
+                <div class="title">Help</div>
+                <ul class="dropdown">
+                    <li>Documentation</li>
+                    <li>About</li>
+                </ul>
+            </div>
+
+        </nav>
+    </header>
+
+
+<!--   
     <div class="notepad-container">
+
         <div class="top-bar">
             <div class="title">Notepad+++</div>
             <div class="menu-bar">
@@ -60,6 +123,7 @@
             </div>
             <div class="tab add-tab">+</div>
         </div>
+          -->
          <!--text editor area -->
         <textarea id="text-editor" placeholder="Type your text here..."></textarea>
         <div class="status-bar">
