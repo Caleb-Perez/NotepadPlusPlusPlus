@@ -13,6 +13,7 @@ function createWindow () {
     }
   })
   win.loadFile('homePage.html')
+  win.setMenu(null) //remove electron menu bar
 }
 app.whenReady().then(() => {
   createWindow()
