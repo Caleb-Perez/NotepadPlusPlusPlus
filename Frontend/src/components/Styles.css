@@ -1,0 +1,302 @@
+* {
+	box-sizing: border-box;
+}
+
+.logo {
+	display: flex;
+	margin: 0;
+	align-items: center;
+	padding: 0 5px;
+}
+
+.title-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #333;
+	color: #fff;
+	padding: 0 10px;
+	height: 30px;
+}
+
+.title-bar .title {
+	font-size: 25px;
+	font-weight: bold;
+	margin-left: 10px;
+}
+
+.editor-tabs {
+	display: flex;
+	height: 100%;
+}
+
+.tab {
+	margin: 0;
+	padding: 0 10px;
+	display: flex;
+	align-items: center;
+	background: #5e6567;
+	height: 100%;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	cursor: pointer;
+	position: relative;
+	border-right: 1px solid #5e6567;
+}
+
+.tab:hover,
+.tab:focus,
+.tab.active {
+	background: #5e6567;
+}
+
+.close-tab {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	background-color: #ff4c4c;
+	color: #ffffff;
+	border: none;
+	padding: 2px 6px;
+	font-size: 12px;
+	cursor: pointer;
+	border-radius: 3px;
+	display: none;
+}
+
+.tab:hover .close-tab {
+	display: inline-block;
+}
+
+.add-tab {
+	margin: 0;
+	padding: 0 10px;
+	display: flex;
+	align-items: center;
+	background: #5e6567;
+	height: 100%;
+	cursor: pointer;
+	background: #5e6567;
+	border-right: 1px solid #5e6567;
+}
+
+.add-tab:hover,
+.add-tab:focus {
+	background: #555;
+}
+
+.window-controls {
+	display: flex;
+	align-items: center;
+}
+
+.window-controls button {
+	background: none;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+	font-size: 16px;
+	width: 40px;
+	height: 30px;
+}
+
+.window-controls button:hover {
+	background-color: #555;
+}
+
+.second-top-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #5e6567;
+	padding: 0 10px;
+	height: 30px;
+}
+.menu-bar {
+	display: flex;
+	gap: 20px;
+}
+
+.menu {
+	font-size: 1em;
+	cursor: pointer;
+	color: #5e6567;
+	position: relative;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.menu:hover {
+	color: #77aaff;
+}
+
+.menu.active,
+.menu:hover {
+	background-color: #2e2e2e;
+}
+.title {
+	color: #c4cbda;
+}
+
+.dropdown {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background-color: #1a1e1f;
+	border: 1px solid #444;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 150px;
+	z-index: 10;
+	border-radius: 5px;
+}
+
+.dropdown li {
+	padding: 10px;
+	cursor: pointer;
+	border-bottom: 1px solid #444;
+	color: #c4cbda;
+}
+
+.dropdown li:last-child {
+	border-bottom: none;
+}
+
+.dropdown li:hover {
+	background-color: #2e2e2e;
+	color: #77aaff;
+}
+
+.menu.active .dropdown {
+	display: block;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100vh;
+	padding: 20px;
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	margin-left: 50px;
+}
+
+.welcome-text {
+	margin-bottom: 15px;
+}
+
+.welcome-text h2,
+.welcome-text h3 {
+	margin: 0;
+	color: #cccccc;
+	font-size: 16pt;
+	font-style: initial;
+}
+
+.buttons {
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+}
+
+button {
+	background-color: #e0e0e0;
+	border: none;
+	border-radius: 20px;
+	color: #333;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	font-size: 18px;
+	margin: 10px;
+	padding: 10px;
+	width: 200px;
+}
+
+button .icon {
+	margin-right: 10px;
+}
+
+button:hover {
+	background-color: #cccccc;
+}
+
+.pop-up {
+	width: 500px;
+	background: #fff;
+	border-radius: 7px;
+	position: absolute;
+	top: 0%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0.1);
+	text-align: center;
+	padding: 0 30px 30px;
+	color: #333;
+	visibility: hidden;
+	transform: 0.4s, top 0.4s;
+	justify-content: center;
+	flex-direction: column;
+	box-shadow: 0px 2px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.open-popup {
+	visibility: visible;
+	top: 50%;
+	transform: translate(-50%, -50%) scale(1);
+}
+
+.link-button-pop-up {
+	background-color: #e0e0e0;
+	border: none;
+	border-radius: 10px;
+	color: #333;
+	cursor: pointer;
+	display: inline-block;
+	align-items: center;
+	font-size: 18px;
+	margin: 10px 0;
+	padding: 10px 20px;
+	width: 200px;
+}
+
+.link-button-pop-up:hover {
+	background-color: #cccccc;
+}
+
+.close-btn {
+	position: absolute;
+	top: -5px;
+	right: 10px;
+	width: 20px;
+	height: 20px;
+	background: transparent;
+	border-radius: 20%;
+	cursor: pointer;
+}
+
+.blur {
+	filter: blur(30px);
+	background: rgba(0, 0, 0, 0.8);
+	transition: filter 0ms ease-in-out 0ms;
+}
+
+.bottom-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #333;
+	color: #fff;
+	padding: 0 10px;
+	height: 30px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
