@@ -108,20 +108,3 @@ body {
 .menu.active .dropdown {
 	display: block;
 }
-
-.edit-bar {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	background-color: #333;
-	padding: 10px;
-	color: #c4cbda;
-	font-size: 0.9em;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-}
-
-.edit-bar span {
-	margin: 0 10px;
-}
