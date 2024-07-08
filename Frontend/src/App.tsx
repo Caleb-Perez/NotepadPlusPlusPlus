@@ -2,18 +2,21 @@ import React from "react";
 import "./App.css";
 import TitleBar from "./components/TitleBar";
 import SecondTopBar from "./components/SecondTopBar";
-import StartUpSign from "./components/StartUpSign";
-import PopUp from "./components/PopUp";
-import BottomBar from "./components/BottomBar";
+import HomePage from "./pages/Home";
+import TextBox from "./pages/Edit";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
 const App: React.FC = () => {
 	return (
 		<div className="App">
 			<TitleBar />
 			<SecondTopBar />
-			<StartUpSign />
-			<PopUp />
-			<BottomBar />
+			<Router>
+				<Routes>
+					<Route path="/" element={<HomePage />} />
+					<Route path="/edit" element={<TextBox />} />
+				</Routes>
+			</Router>
 		</div>
 	);
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
 const StartUpSign: React.FC = () => {
 	const openFile: React.MouseEventHandler<HTMLButtonElement> = () => {};
@@ -15,7 +16,9 @@ const StartUpSign: React.FC = () => {
 						<span className="icon">📂</span> Open file
 					</button>
 					<button id="create-new" onClick={createNewFile}>
-						<span className="icon">➕</span> Create New
+						<Link to="/edit">
+							<span className="icon">➕</span> Create New
+						</Link>
 					</button>
 				</div>
 			</main>
