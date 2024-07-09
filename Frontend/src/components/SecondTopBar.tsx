@@ -1,9 +1,9 @@
 import React from "react";
 import MenuBar from "./MenuBar";
-import { ViewMenu } from "./../ViewMenu";
-import { LanguageMenu } from "./../LanguageMenu";
-import { FileMenu } from "./../FileMenu";
-import { HelpMenu } from "./../HelpMenu";
+import { ViewMenu } from "./../menus/ViewMenu";
+import { LanguageMenu } from "./../menus/LanguageMenu";
+import { FileMenu } from "./../menus/FileMenu";
+import { HelpMenu } from "./../menus/HelpMenu";
 const SecondTopBar: React.FC = () => {
 	return (
 		<header className="second-top-bar">

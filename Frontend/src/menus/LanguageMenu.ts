@@ -1,4 +1,4 @@
-import { MenuProps } from "./components/Menu";
+import { MenuProps } from "../components/Menu";
 
 export const LanguageMenu: MenuProps = {
 	title: "Language",
