@@ -1,35 +1,35 @@
 import React, {useState} from "react";
+import {Link, Navigate} from "react-router-dom"
 
-
-const PopUp: React.FC = () => {
-	const [popupVisible, setPopupVisible] = useState<boolean>(false);
-
-    const togglePopup = () => {
-	setPopupVisible(!popupVisible);
+type propTypes = {
+	open: boolean;
+	onClose: () => void;
 }
 
+const PopUp: React.FC<propTypes> = ({open, onClose}) => {
 	const closePopup: React.MouseEventHandler<HTMLButtonElement> = () => {};
+	const [popupVisible, setPopupVisible] = useState<boolean>(false);
+	const [goToEditPage, setGoToEditPage] = React.useState(false);
+
+	if(!open) return null;
+
+	if (goToEditPage) {
+		return <Navigate to ="/edit" />;
+	}
+
 	return (
 		<div className="pop-up" id="pop-up">
-			<button className="close-btn " id="close-btn" onClick={closePopup}>
+			<button className="close-btn " id="close-btn" onClick={onClose}>
 				&times;
 			</button>
 			<h2>Create New</h2>
 			<p>Select the type of file you want:</p>
-		
-			<a href="text.html" className="link-button-pop-up">
-				Text File
-			</a>
-			<a href="text.html" className="link-button-pop-up">
-				Python File
-			</a>
-			<a href="text.html" className="link-button-pop-up">
-				C++ File
-			</a>
-			<a href="text.html" className="link-button-pop-up">
-				Java File
-			</a>
+		    <Link to="/edit" className="link-button-pop-up" onClick= {() => {setGoToEditPage(true); }}>Text File</Link>
+			<Link to="/edit" className="link-button-pop-up" onClick= {() => {setGoToEditPage(true); }}>Python File</Link>
+			<Link to="/edit" className="link-button-pop-up" onClick= {() => {setGoToEditPage(true); }}>C++ File</Link>
+			<Link to="/edit" className="link-button-pop-up" onClick= {() => {setGoToEditPage(true); }}>Java File</Link>
 		</div>
+	
 	);
 };
 
