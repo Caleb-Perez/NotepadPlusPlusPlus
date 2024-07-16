@@ -7,8 +7,6 @@ type propTypes = {
 }
 
 const PopUp: React.FC<propTypes> = ({open, onClose}) => {
-	const closePopup: React.MouseEventHandler<HTMLButtonElement> = () => {};
-	const [popupVisible, setPopupVisible] = useState<boolean>(false);
 	const [goToEditPage, setGoToEditPage] = React.useState(false);
 
 	if(!open) return null;

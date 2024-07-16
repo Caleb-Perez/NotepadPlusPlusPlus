@@ -1,3 +1,4 @@
+import { render } from "@testing-library/react";
 import { type } from "@testing-library/user-event/dist/type";
 import React, {useRef, useState} from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
@@ -9,33 +10,35 @@ type StartUpSignProps = {
 	openPopup: () => void;
 }
 const StartUpSign: React.FC = () => {
-	const openFile: React.MouseEventHandler<HTMLButtonElement> = () => {};
-	const createNewFile: React.MouseEventHandler<HTMLButtonElement> = () => {};
-	const [goToEditPage, setGoToEditPage] = React.useState(false);// will delete 
+	const [goToEditPage, setGoToEditPage] = React.useState(false); 
 	const inputFile = useRef<HTMLInputElement | null > (null);
 	const [openPopUp, setPopUp] = useState(false);
 
 	if (goToEditPage) {
 		return <Navigate to="/edit" />;
 	}
+ 
+	const openFileBrowser = () => {
+		if (inputFile.current) {
+			inputFile.current.click();
+		}
+	}
 
-	/*
 	const handleFile: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-		const file = event.target.files;
-		if(file){
-			const selectedFile = file[0];
-			console.log('Selected file:', selectedFile.name);
-
+		const files = event.target.files;
+		if (files){
+			const file = files[0];
 			const reader = new FileReader();
+			//const fileRef = storageRef.child(file);
 			reader.onload = (e)=> {
 				const fileContent = e.target?.result as string;
                 console.log('File content:', fileContent);
 
+				window.location.href = "/edit";//will fix later
 			};
 			reader.readAsText(file);
-		}
-	}
-	*/
+		};
+	};
 
 	return (
 		<div className="container">
@@ -45,15 +48,18 @@ const StartUpSign: React.FC = () => {
 					<h2>Here</h2>
 				</div>
 				<div className="buttons">
-					<button id="open-file" onClick={openFile}>
+					<button id="open-file" onClick={openFileBrowser}>
 						<span className="icon">📂</span> Open file
-						{/* <input
-						accept = ".txt, .cpp, .py, .js"
-						type= "file"
-						style={{display: "none"}}
-						onChange={handleFile}
-	                    />*/}
+						
 					</button>
+					{/*if "style = {{display: 'none'}}" is removed, the file browser wont open but you can drag a file and it will work. Still in progress*/}
+					<input
+					    ref = {inputFile}
+						accept = ".txt,.cpp,.py,.js"
+						type= "file"
+						onChange={handleFile}
+						style = {{display: 'none'}}
+	                />
 					<button id="create-new" onClick={() => setPopUp(true)}>
 						<span className="icon">➕</span> Create New
 					</button>
