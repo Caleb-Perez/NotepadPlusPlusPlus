@@ -8,7 +8,7 @@ import PopUp from "./PopUp";
 type StartUpSignProps = {
 	openPopup: () => void;
 }
-const StartUpSign: React.FC<StartUpSignProps> = ({openPopup}) => {
+const StartUpSign: React.FC = () => {
 	const openFile: React.MouseEventHandler<HTMLButtonElement> = () => {};
 	const createNewFile: React.MouseEventHandler<HTMLButtonElement> = () => {};
 	const [goToEditPage, setGoToEditPage] = React.useState(false);// will delete 
@@ -16,7 +16,7 @@ const StartUpSign: React.FC<StartUpSignProps> = ({openPopup}) => {
 	const [openPopUp, setPopUp] = useState(false);
 
 	if (goToEditPage) {
-		return <Navigate to ="/edit" />;
+		return <Navigate to="/edit" />;
 	}
 
 	/*
@@ -54,16 +54,20 @@ const StartUpSign: React.FC<StartUpSignProps> = ({openPopup}) => {
 						onChange={handleFile}
 	                    />*/}
 					</button>
-					{/* Will come back and fix the Create New */}
-					{/*<button id="create-new" onClick={openPopup}> 
-						<span className="icon">➕</span> Create New
-	                </button> */}
-					<button id="create-new" onClick= {() => {setGoToEditPage(true); }} > 
+					<button id="create-new" onClick={() => setPopUp(true)}>
 						<span className="icon">➕</span> Create New
 					</button>
-
-					
-					<PopUp open ={openPopUp} onClose={() => setPopUp(false)}/>
+				</div>
+				<div className={`pop-up ${openPopUp ? 'open-popup' : ''}`} id="pop-up">
+					<button className="close-btn" id="close-btn" onClick={() => setPopUp(false)}>
+						&times;
+					</button>
+					<h2>Create New</h2>
+					<p>Select the type of file you want:</p>
+					<button className="link-button-pop-up" onClick={() => setGoToEditPage(true)}>Text File</button>
+					<button className="link-button-pop-up" onClick={() => setGoToEditPage(true)}>Python File</button>
+					<button className="link-button-pop-up" onClick={() => setGoToEditPage(true)}>C++ File</button>
+					<button className="link-button-pop-up" onClick={() => setGoToEditPage(true)}>Java File</button>
 				</div>
 			</main>
 		</div>
@@ -71,3 +75,6 @@ const StartUpSign: React.FC<StartUpSignProps> = ({openPopup}) => {
 };
 
 export default StartUpSign;
+
+
+

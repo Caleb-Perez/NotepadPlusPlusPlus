@@ -16,7 +16,7 @@ const HomePage: React.FC = () => {
 	
 	return (
 		<div>
-			<StartUpSign openPopup= {openPopUp}/>
+			<StartUpSign />
 			<PopUp open ={openPopUpVisible} onClose = {closePopup} />
 			<BottomBar />
 		</div>
