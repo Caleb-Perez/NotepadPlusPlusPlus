@@ -7,7 +7,7 @@ export const ViewMenu: MenuProps = {
 		{
 			label: "Zoom Out",
 			class: " ",
-			action: () => alert("Zoom In clicked"),
+			action: () => alert("Zoom out clicked"),
 		},
 		{
 			label: "Full Screen",
@@ -16,3 +16,5 @@ export const ViewMenu: MenuProps = {
 		},
 	],
 };
+
+
