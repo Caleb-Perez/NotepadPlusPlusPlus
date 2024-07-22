@@ -8,6 +8,7 @@ interface TabProps {
 	label: string;
 	className: string;
 	onClick: () => void;
+	onDelete: () => void;
 	isActive: boolean;
 }
 
@@ -16,6 +17,7 @@ const Tab: React.FC<TabProps> = ({
 	label,
 	className,
 	onClick,
+	onDelete,
 	isActive,
 }) => {
 	const [tabText, setTabText] = useState("");
@@ -55,7 +57,15 @@ const Tab: React.FC<TabProps> = ({
 			id={id}
 		>
 			<div className="tab-title">{label}</div>
-			<span className="close-tab">&#10005;</span>
+			<span
+				className="close-tab"
+				onClick={(e) => {
+					onDelete();
+					e.stopPropagation();
+				}}
+			>
+				&#10005;
+			</span>
 		</div>
 	);
 };
