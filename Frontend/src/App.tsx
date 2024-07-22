@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useRef, useContext } from "react";
 import "./App.css";
 import TitleBar from "./components/TitleBar";
 import SecondTopBar from "./components/SecondTopBar";
 import HomePage from "./pages/Home";
-import TextBox from "./pages/Edit";
+import EditPage from "./pages/Edit";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import TextBoxProvider from "./components/Textbox";
 
 const App: React.FC = () => {
 	return (
 		<div className="App">
-			<TitleBar />
-			<SecondTopBar />
-			<Router>
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/edit" element={<TextBox />} />
-				</Routes>
-			</Router>
+			<TextBoxProvider>
+				<TitleBar />
+				<SecondTopBar />
+				<Router>
+					<Routes>
+						<Route path="/" element={<HomePage />} />
+						<Route path="/edit" element={<EditPage />} />
+					</Routes>
+				</Router>
+			</TextBoxProvider>
 		</div>
 	);
 };

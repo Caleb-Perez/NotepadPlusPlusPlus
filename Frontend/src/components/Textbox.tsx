@@ -1,11 +1,47 @@
-import React, { useRef, useEffect } from "react";
+import React, {
+	useRef,
+	useEffect,
+	createContext,
+	ReactNode,
+	useContext,
+} from "react";
 
-const TextBox: React.FC = () => {
+interface TextBoxContextType {
+	textAreaRef: React.RefObject<HTMLTextAreaElement>;
+}
+const TextBoxContext = createContext<TextBoxContextType | undefined>(undefined);
+
+export const TextBoxProvider: React.FC<{ children: ReactNode }> = ({
+	children,
+}) => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+	return (
+		<TextBoxContext.Provider value={{ textAreaRef }}>
+			{children}
+		</TextBoxContext.Provider>
+	);
+};
+
+export const useTextBox = (): TextBoxContextType => {
+	const context = useContext(TextBoxContext);
+	if (!context) {
+		throw new Error("useTextBox must be used within a TextBoxProvider");
+	}
+	return context;
+};
+
+export const TextBox: React.FC = () => {
+	const { textAreaRef } = useTextBox();
 	const lineNumberRef = useRef<HTMLDivElement>(null);
 
 	const updateLineNum = () => {
-		if (lineNumberRef.current && textAreaRef.current) {
+		if (
+			lineNumberRef.current &&
+			textAreaRef &&
+			"current" in textAreaRef &&
+			textAreaRef.current
+		) {
 			const textLines = textAreaRef.current.value.split("\n");
 			const displayLines = Math.max(textLines.length, 28);
 			const lineNUmbers = Array.from(
@@ -17,7 +53,12 @@ const TextBox: React.FC = () => {
 	};
 
 	const handleScroll = () => {
-		if (lineNumberRef.current && textAreaRef.current) {
+		if (
+			lineNumberRef.current &&
+			textAreaRef &&
+			"current" in textAreaRef &&
+			textAreaRef.current
+		) {
 			lineNumberRef.current.scrollTop = textAreaRef.current.scrollTop;
 		}
 	};
@@ -51,4 +92,4 @@ const TextBox: React.FC = () => {
 	);
 };
 
-export default TextBox;
+export default TextBoxProvider;

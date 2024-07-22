@@ -45,9 +45,12 @@
 }
 
 .tab:hover,
-.tab:focus,
-.tab.active {
+.tab:focus {
 	background: #5e6567;
+}
+
+.tab.active {
+	background-color: white;
 }
 
 .close-tab {
