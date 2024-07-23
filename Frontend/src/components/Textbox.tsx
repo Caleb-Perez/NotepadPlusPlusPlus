@@ -63,7 +63,7 @@ export const TextBox: React.FC = () => {
 		}
 	};
 
-	const autoClosing = (event:React.KeyboardEvent<HTMLTextAreaElement>) => {
+	const autoClosing = (event: KeyboardEvent) => {
 		const textArea = textAreaRef.current;
 		if(!textArea) return;
 
@@ -79,22 +79,27 @@ export const TextBox: React.FC = () => {
 		else if(event.key === "["){
 			newText = before + "[]" + after;
 		}
-		else if(event.key === "  "){
-			newText = before + " " + after;
+		else if(event.key === "(") {
+			newText = before + "() " + after;
 		}
-		else if(event.key === "'"){
+		else if(event.key === "'") {
 			newText = before + "''" + after;
 		}
-		//add ""
-
+		else if(event.key === '"') {
+			newText = before + '""' + after;
+		}
+		else if(event.key === "Tab") {
+			newText = before + "\t" + after;
+		}
+		
 		if(newText !== textArea.value) {
 			event.preventDefault();
-			textArea.value = newText;
-			textArea.selectionStart = pos +1;
-			textArea.selectionEnd = pos + 1;
+			textArea.value = newText;//update
+			textArea.selectionStart = pos;
+			textArea.selectionEnd = pos
+			textArea.value = newText;//update
 			setTimeout(updateLineNum,0)
 		}
-
 	}
 
 	useEffect(() => {
@@ -103,15 +108,16 @@ export const TextBox: React.FC = () => {
 		if (textArea) {
 			textArea.addEventListener("scroll", handleScroll);
 			textArea.addEventListener("input", updateLineNum);
+			textArea.addEventListener("keydown", autoClosing);
 			updateLineNum();
 
 			return () => {
 				textArea.removeEventListener("scroll", handleScroll);
 				textArea.removeEventListener("input", updateLineNum);
+				textArea.removeEventListener("keydown", autoClosing);
 			};
 		}
 	}, []);
-
 
 
 	return (
@@ -123,7 +129,6 @@ export const TextBox: React.FC = () => {
 				className="text-area"
 				placeholder="Type your text here..."
 				onScroll={handleScroll}
-				onKeyDown={autoClosing}
 			/>
 		</div>
 	);
