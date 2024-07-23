@@ -43,7 +43,7 @@ export const TextBox: React.FC = () => {
 			textAreaRef.current
 		) {
 			const textLines = textAreaRef.current.value.split("\n");
-			const displayLines = Math.max(textLines.length, 28);
+			const displayLines = Math.max(textLines.length, 50);
 			const lineNUmbers = Array.from(
 				{ length: displayLines },
 				(_, index) => index + 1
@@ -63,6 +63,40 @@ export const TextBox: React.FC = () => {
 		}
 	};
 
+	const autoClosing = (event:React.KeyboardEvent<HTMLTextAreaElement>) => {
+		const textArea = textAreaRef.current;
+		if(!textArea) return;
+
+		const pos = textArea.selectionStart;
+		const before = textArea.value.substr(0,pos);
+		const after = textArea.value.substr(pos, textArea.value.length);
+
+		let newText = textArea.value;
+
+		if(event.key === "{") {
+			newText = before + "{}" + after;
+		}
+		else if(event.key === "["){
+			newText = before + "[]" + after;
+		}
+		else if(event.key === "  "){
+			newText = before + " " + after;
+		}
+		else if(event.key === "'"){
+			newText = before + "''" + after;
+		}
+		//add ""
+
+		if(newText !== textArea.value) {
+			event.preventDefault();
+			textArea.value = newText;
+			textArea.selectionStart = pos +1;
+			textArea.selectionEnd = pos + 1;
+			setTimeout(updateLineNum,0)
+		}
+
+	}
+
 	useEffect(() => {
 		const textArea = textAreaRef.current;
 
@@ -78,6 +112,8 @@ export const TextBox: React.FC = () => {
 		}
 	}, []);
 
+
+
 	return (
 		<div className="text-container">
 			<div className="line-numbers" ref={lineNumberRef} />
@@ -87,9 +123,11 @@ export const TextBox: React.FC = () => {
 				className="text-area"
 				placeholder="Type your text here..."
 				onScroll={handleScroll}
+				onKeyDown={autoClosing}
 			/>
 		</div>
 	);
 };
+ 
 
 export default TextBoxProvider;
