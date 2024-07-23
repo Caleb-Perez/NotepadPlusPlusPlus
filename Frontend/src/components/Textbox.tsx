@@ -43,7 +43,7 @@ export const TextBox: React.FC = () => {
 			textAreaRef.current
 		) {
 			const textLines = textAreaRef.current.value.split("\n");
-			const displayLines = Math.max(textLines.length, 28);
+			const displayLines = Math.max(textLines.length, 50);
 			const lineNUmbers = Array.from(
 				{ length: displayLines },
 				(_, index) => index + 1
@@ -63,20 +63,62 @@ export const TextBox: React.FC = () => {
 		}
 	};
 
+	const autoClosing = (event: KeyboardEvent) => {
+		const textArea = textAreaRef.current;
+		if(!textArea) return;
+
+		const pos = textArea.selectionStart;
+		const before = textArea.value.substr(0,pos);
+		const after = textArea.value.substr(pos, textArea.value.length);
+
+		let newText = textArea.value;
+
+		if(event.key === "{") {
+			newText = before + "{}" + after;
+		}
+		else if(event.key === "["){
+			newText = before + "[]" + after;
+		}
+		else if(event.key === "(") {
+			newText = before + "() " + after;
+		}
+		else if(event.key === "'") {
+			newText = before + "''" + after;
+		}
+		else if(event.key === '"') {
+			newText = before + '""' + after;
+		}
+		else if(event.key === "Tab") {
+			newText = before + "\t" + after;
+		}
+		
+		if(newText !== textArea.value) {
+			event.preventDefault();
+			textArea.value = newText;//update
+			textArea.selectionStart = pos;
+			textArea.selectionEnd = pos
+			textArea.value = newText;//update
+			setTimeout(updateLineNum,0)
+		}
+	}
+
 	useEffect(() => {
 		const textArea = textAreaRef.current;
 
 		if (textArea) {
 			textArea.addEventListener("scroll", handleScroll);
 			textArea.addEventListener("input", updateLineNum);
+			textArea.addEventListener("keydown", autoClosing);
 			updateLineNum();
 
 			return () => {
 				textArea.removeEventListener("scroll", handleScroll);
 				textArea.removeEventListener("input", updateLineNum);
+				textArea.removeEventListener("keydown", autoClosing);
 			};
 		}
 	}, []);
+
 
 	return (
 		<div className="text-container">
@@ -91,5 +133,6 @@ export const TextBox: React.FC = () => {
 		</div>
 	);
 };
+ 
 
 export default TextBoxProvider;
