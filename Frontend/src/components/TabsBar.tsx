@@ -53,6 +53,7 @@ const TabsBar: React.FC = () => {
 			<span className="logo">👽 </span>
 			{tabs.map((tab) => (
 				<Tab
+					key={tab.id}
 					id={tab.id}
 					label={tab.label}
 					className={tab.className}
