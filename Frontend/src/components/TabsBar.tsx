@@ -1,7 +1,8 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, useEffect } from "react";
 import Tab from "./Tab";
 // import { TabProps } from "./Tab";
 import { useTextBox } from "./Textbox";
+import { text } from "stream/consumers";
 
 interface TabProps {
 	id: string;
@@ -18,7 +19,7 @@ const TabsBar: React.FC = () => {
 	const addTab = () => {
 		//TODO FIX ACCORDING TO ALREADY EXISITING TAB PROPS
 		const newTab: TabProps = {
-			label: "New Tab",
+			label: `Tab ${nextID}`,
 			id: nextID.toString(),
 			className: "tab",
 		};
@@ -30,20 +31,19 @@ const TabsBar: React.FC = () => {
 
 	const deleteTab = (id: string) => {
 		setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== id));
-		if (id === activeTab) {
-			console.log(`${tabs[tabs.length - 2].id} should be the active tab now`);
-			setActiveTab(tabs[tabs.length - 2].id);
-		}
-		textAreaRef?.current?.focus();
-		//Deactivate current tab
-		//Deal with changing active tab
-		//If no tabs, close program
 	};
+
+	useEffect(() => {
+		if (tabs.length === 0) {
+			setActiveTab("0");
+		} else if (activeTab && !tabs.find((tab) => tab.id === activeTab)) {
+			setActiveTab(tabs[tabs.length - 1].id);
+		}
+	}, [tabs, activeTab]);
 
 	const changeTab = (id: string) => {
 		if (activeTab != id) {
 			setActiveTab(id);
-			console.log(`${id} is now active`);
 		}
 		textAreaRef?.current?.focus();
 	};

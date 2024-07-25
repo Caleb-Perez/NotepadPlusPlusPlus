@@ -27,7 +27,6 @@ const Tab: React.FC<TabProps> = ({
 		const handleChange = () => {
 			if (textAreaRef.current) {
 				setTabText(textAreaRef.current.value);
-				console.log(`Tab ${id} changed to ${textAreaRef.current.value}`);
 			}
 		};
 
@@ -43,8 +42,6 @@ const Tab: React.FC<TabProps> = ({
 		};
 	}, [isActive, textAreaRef, id]);
 
-	const closeTab = () => {};
-
 	return (
 		<div
 			className={`${className} ${isActive ? "active" : ""}`}
@@ -55,6 +52,7 @@ const Tab: React.FC<TabProps> = ({
 				onClick();
 			}}
 			id={id}
+			key={id}
 		>
 			<div className="tab-title">{label}</div>
 			<span
