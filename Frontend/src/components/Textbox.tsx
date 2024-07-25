@@ -65,42 +65,43 @@ export const TextBox: React.FC = () => {
 
 	const autoClosing = (event: KeyboardEvent) => {
 		const textArea = textAreaRef.current;
-		if(!textArea) return;
+		if (!textArea) return;
 
-		const pos = textArea.selectionStart;
-		const before = textArea.value.substr(0,pos);
+		let pos = textArea.selectionStart;
+		const before = textArea.value.substr(0, pos);
 		const after = textArea.value.substr(pos, textArea.value.length);
 
 		let newText = textArea.value;
 
-		if(event.key === "{") {
+		if (event.key === "{") {
 			newText = before + "{}" + after;
-		}
-		else if(event.key === "["){
+			pos += 1;
+		} else if (event.key === "[") {
 			newText = before + "[]" + after;
-		}
-		else if(event.key === "(") {
-			newText = before + "() " + after;
-		}
-		else if(event.key === "'") {
+			pos += 1;
+		} else if (event.key === "(") {
+			newText = before + "()" + after;
+			pos += 1;
+		} else if (event.key === "'") {
 			newText = before + "''" + after;
-		}
-		else if(event.key === '"') {
+			pos += 1;
+		} else if (event.key === '"') {
 			newText = before + '""' + after;
-		}
-		else if(event.key === "Tab") {
+			pos += 1;
+		} else if (event.key === "Tab") {
 			newText = before + "\t" + after;
+			pos += 1;
 		}
-		
-		if(newText !== textArea.value) {
+
+		if (newText !== textArea.value) {
 			event.preventDefault();
-			textArea.value = newText;//update
+			textArea.value = newText; //update
 			textArea.selectionStart = pos;
-			textArea.selectionEnd = pos
-			textArea.value = newText;//update
-			setTimeout(updateLineNum,0)
+			textArea.selectionEnd = pos;
+			textArea.value = newText; //update
+			setTimeout(updateLineNum, 0);
 		}
-	}
+	};
 
 	useEffect(() => {
 		const textArea = textAreaRef.current;
@@ -119,7 +120,6 @@ export const TextBox: React.FC = () => {
 		}
 	}, []);
 
-
 	return (
 		<div className="text-container">
 			<div className="line-numbers" ref={lineNumberRef} />
@@ -133,6 +133,5 @@ export const TextBox: React.FC = () => {
 		</div>
 	);
 };
- 
 
 export default TextBoxProvider;
