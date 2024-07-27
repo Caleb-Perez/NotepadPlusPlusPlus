@@ -16,4 +16,7 @@ export const zoomOut = () => {
     document.body.style.transformOrigin = '0 0'; 
 };
 
-
+//fullscreen
+export const fullScreen = () => {
+    document.body.requestFullscreen();
+}

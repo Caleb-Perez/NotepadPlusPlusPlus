@@ -1,5 +1,5 @@
 import { MenuProps } from "../components/Menu";
-import { zoomIn, zoomOut } from "../components/Zoom";
+import { fullScreen, zoomIn, zoomOut } from "../components/Zoom";
 
 export const ViewMenu: MenuProps = {
     title: "View",
@@ -15,7 +15,7 @@ export const ViewMenu: MenuProps = {
 		{
 			label: "Full Screen",
 			class: " ",
-			action: () => alert("Full Screen clicked"),
+			action: () => fullScreen(),
 		},
 	],
 };
