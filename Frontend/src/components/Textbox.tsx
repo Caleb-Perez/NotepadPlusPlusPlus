@@ -92,6 +92,32 @@ export const TextBox: React.FC = () => {
 			newText = before + "\t" + after;
 			pos += 1;
 		}
+		else if (event.key === "Enter") {
+			const posCurrentLine = before.lastIndexOf("\n") + 1;
+			const currentLine = before.substring(posCurrentLine);
+			const currentIndent = currentLine.match(/^\s*/);
+			const indent = currentIndent ? currentIndent[0] : "";
+
+			if (before.endsWith("{")) {
+				newText = before + "\n" + indent + "\t\n" + indent + after;
+				pos = before.length +1 + indent.length + 1;
+			}
+			else if (before.endsWith("[")) {
+				newText = before + "\n" + indent + "\t\n" + indent + after;
+				pos = before.length +1 + indent.length + 1;
+
+			}
+			else if (before.endsWith("(")) {
+				newText = before + "\n" + indent + "\t\n" + indent + after;
+				pos = before.length +1 + indent.length + 1;
+
+			}
+			else { //help keeps the pos after indenting 
+				newText = before + "\n" + indent + after;
+				pos = before.length + 1 + indent.length ;
+
+			}
+		}
 
 		if (newText !== textArea.value) {
 			event.preventDefault();

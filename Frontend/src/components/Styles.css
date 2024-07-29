@@ -266,6 +266,7 @@ textarea {
 	border: none;
 	overflow: auto;
 	outline: none;
+	display: fixed;
 
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
