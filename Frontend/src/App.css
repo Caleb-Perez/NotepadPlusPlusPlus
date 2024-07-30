@@ -66,21 +66,21 @@ body {
 	position: absolute;
 	top: 100%;
 	left: 0;
-	background-color: #1a1e1f;
-	border: 1px solid #444;
+	background-color: #5e6567;
+	/* border: 1px solid #ffffff; */
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	list-style: none;
 	padding: 0;
 	margin: 0;
 	width: 150px;
 	z-index: 10;
-	border-radius: 5px;
+	border-radius: 10px;
 }
 
 .dropdown li {
 	padding: 10px;
 	cursor: pointer;
-	border-bottom: 1px solid #444;
+	border-bottom: 1px solid #ffffff;
 	color: #c4cbda;
 }
 

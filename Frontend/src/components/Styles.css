@@ -13,9 +13,9 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: #333;
+	background-color: #1a1e1f;
 	color: #fff;
-	padding: 0 10px;
+	padding: 0px;
 	height: 30px;
 }
 
@@ -35,13 +35,13 @@
 	padding: 0 10px;
 	display: flex;
 	align-items: center;
-	background: #01628b;
+	background: #03344b;
 	height: 100%;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
 	cursor: pointer;
 	position: relative;
-	border-right: 1px solid #5e6567;
+	/* border-right: 1px solid; */
 }
 
 .tab:hover,
@@ -50,7 +50,7 @@
 }
 
 .tab.active {
-	background-color: black;
+	background-color: #01628b;
 }
 
 .close-tab {
@@ -73,14 +73,15 @@
 
 .add-tab {
 	margin: 0;
-	padding: 0 10px;
+	padding: 5px;
 	display: flex;
+	border-radius: 100%;
 	align-items: center;
-	background: #5e6567;
+	background: transparent;
 	height: 100%;
 	cursor: pointer;
-	background: #5e6567;
-	border-right: 1px solid #5e6567;
+	color: #868686;
+	font-size: 30px;
 }
 
 .add-tab:hover,
@@ -91,16 +92,21 @@
 .window-controls {
 	display: flex;
 	align-items: center;
+	height: 45px;
+	padding: 0px;
+	margin: 0px;
 }
 
 .window-controls button {
 	background: none;
 	border: none;
-	color: #fff;
+	color: #868686;
 	cursor: pointer;
 	font-size: 16px;
 	width: 40px;
 	height: 30px;
+	margin: 0px;
+	padding: 0px;
 }
 
 .window-controls button:hover {
@@ -117,10 +123,12 @@
 }
 
 .container {
+	margin-top: 15vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	height: 100vh;
+	height: auto;
+	width: auto;
 	padding: 20px;
 }
 
@@ -131,17 +139,17 @@ main {
 	margin-left: 50px;
 }
 
-.welcome-text {
+/* .welcome-text {
 	margin-bottom: 15px;
-}
+} */
 
-.welcome-text h2,
+/* .welcome-text h2,
 .welcome-text h3 {
 	margin: 0;
 	color: #cccccc;
 	font-size: 16pt;
 	font-style: initial;
-}
+} */
 
 .buttons {
 	display: flex;
@@ -150,25 +158,33 @@ main {
 }
 
 button {
-	background-color: #e0e0e0;
+	background-color: #a7a7a7;
 	border: none;
-	border-radius: 20px;
-	color: #333;
+	border-radius: 60px;
+	color: #000000;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
-	font-size: 18px;
-	margin: 10px;
-	padding: 10px;
-	width: 200px;
+	text-align: center;
+	font-size: 30px;
+	font-weight: 600;
+	margin-top: 50px;
+	padding: 30px;
+	height: 115px;
+	width: 415px;
 }
 
 button .icon {
-	margin-right: 10px;
+	margin-right: 20px;
 }
 
 button:hover {
 	background-color: #cccccc;
+}
+
+.plus {
+	font-size: 110px;
+	margin-right: 20px;
 }
 
 .pop-up {
@@ -262,12 +278,10 @@ button:hover {
 }
 
 textarea {
-	resize: none;
 	border: none;
 	overflow: auto;
 	outline: none;
 	display: fixed;
-
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
@@ -275,3 +289,15 @@ textarea {
 	resize: none; /*remove the resize handle on the bottom right*/
 }
 
+.open {
+	margin-left: 35px;
+}
+
+.welcome-text h1 {
+	margin: auto;
+	/* font-size: 300; */
+	font-style: italic;
+	font-weight: 250;
+	color: #ffffff;
+	font-family: inter;
+}
