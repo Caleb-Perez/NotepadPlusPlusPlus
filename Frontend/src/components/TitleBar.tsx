@@ -3,13 +3,9 @@ import WindowControls from "./WindowControls";
 import TabsBar from "./TabsBar";
 import "./Styles.css";
 
-// interface TitleBarProps {
-// 	textBoxRef: React.RefObject<HTMLTextAreaElement>;
-// }
-
 const TitleBar: React.FC /*<TitleBarProps>*/ = () => {
 	return (
-		<div className="title-bar">
+		<div data-tauri-drag-region className="title-bar">
 			<TabsBar />
 			<WindowControls />
 		</div>
