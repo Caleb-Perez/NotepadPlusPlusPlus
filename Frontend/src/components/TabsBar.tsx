@@ -3,6 +3,7 @@ import Tab from "./Tab";
 // import { TabProps } from "./Tab";
 import { useTextBox } from "./Textbox";
 import { text } from "stream/consumers";
+import { invoke } from "@tauri-apps/api";
 
 interface TabProps {
 	id: string;
@@ -10,23 +11,39 @@ interface TabProps {
 	className: string;
 }
 
+async function setNextID() {
+	try {
+		const value: number = await invoke("add_tab", {
+			title: "New Tab",
+			content: "",
+		});
+		return value;
+	} catch (error) {
+		console.error("Error fetching next ID:", error);
+	}
+}
+
 const TabsBar: React.FC = () => {
 	const [tabs, setTabs] = useState<TabProps[]>([]);
-	const [nextID, setNextID] = useState(0);
+	// const [nextID, setNextID] = useState(0);
 	const [activeTab, setActiveTab] = useState("0");
 	const { textAreaRef } = useTextBox();
 
-	const addTab = () => {
+	const addTab = async () => {
 		//TODO FIX ACCORDING TO ALREADY EXISITING TAB PROPS
-		const newTab: TabProps = {
-			label: `Tab ${nextID}`,
-			id: nextID.toString(),
-			className: "tab",
-		};
-		setActiveTab(newTab.id);
-		setNextID(nextID + 1);
-		setTabs((prevTabs) => [...prevTabs, newTab]);
-		textAreaRef?.current?.focus();
+		const nextID = await setNextID();
+		if (nextID != null) {
+			const newTab: TabProps = {
+				label: `Tab ${nextID}`,
+				id: nextID.toString(),
+				className: "tab",
+			};
+
+			setActiveTab(newTab.id);
+			// setNextID(nextID + 1);
+			setTabs((prevTabs) => [...prevTabs, newTab]);
+			textAreaRef?.current?.focus();
+		}
 	};
 
 	const deleteTab = (id: string) => {

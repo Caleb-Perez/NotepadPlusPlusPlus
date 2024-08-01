@@ -72,34 +72,29 @@ const StartUpSign: React.FC = () => {
 					<button
 						className="close-btn"
 						id="close-btn"
-						onClick={() => setPopUp(false)}
-					>
+						onClick={() => setPopUp(false)}>
 						&times;
 					</button>
 					<h2>Create New</h2>
 					<p>Select the type of file you want:</p>
 					<button
 						className="link-button-pop-up"
-						onClick={() => setGoToEditPage(true)}
-					>
+						onClick={() => setGoToEditPage(true)}>
 						Text File
 					</button>
 					<button
 						className="link-button-pop-up"
-						onClick={() => setGoToEditPage(true)}
-					>
+						onClick={() => setGoToEditPage(true)}>
 						Python File
 					</button>
 					<button
 						className="link-button-pop-up"
-						onClick={() => setGoToEditPage(true)}
-					>
+						onClick={() => setGoToEditPage(true)}>
 						C++ File
 					</button>
 					<button
 						className="link-button-pop-up"
-						onClick={() => setGoToEditPage(true)}
-					>
+						onClick={() => setGoToEditPage(true)}>
 						Java File
 					</button>
 				</div>

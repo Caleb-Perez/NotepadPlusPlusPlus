@@ -2,6 +2,7 @@ import { useState, useEffect, forwardRef } from "react";
 import TextBox from "./Textbox";
 import { getAllJSDocTagsOfKind } from "typescript";
 import { useTextBox } from "./Textbox";
+import { invoke } from "@tauri-apps/api";
 
 interface TabProps {
 	id: string;
@@ -26,6 +27,12 @@ const Tab: React.FC<TabProps> = ({
 	useEffect(() => {
 		const handleChange = () => {
 			if (textAreaRef.current) {
+				invoke("update_tab_content", {
+					tabId: parseInt(id),
+					content: textAreaRef.current.value,
+				}).then(() => {
+					console.log("update_tab_content called successfully on tab " + id);
+				});
 				setTabText(textAreaRef.current.value);
 			}
 		};
@@ -52,16 +59,14 @@ const Tab: React.FC<TabProps> = ({
 				onClick();
 			}}
 			id={id}
-			key={id}
-		>
+			key={id}>
 			<div className="tab-title">{label}</div>
 			<span
 				className="close-tab"
 				onClick={(e) => {
 					onDelete();
 					e.stopPropagation();
-				}}
-			>
+				}}>
 				&#10005;
 			</span>
 		</div>
