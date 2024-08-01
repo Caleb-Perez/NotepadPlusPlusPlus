@@ -4,21 +4,20 @@ import React, {
 	createContext,
 	ReactNode,
 	useContext,
-	useState
+	useState,
 } from "react";
 import { EndOfLineState } from "typescript";
 
-
-interface EditBarType { 
+interface EditBarType {
 	//base on cursor pos
 	line: number;
 	col: number;
 	setLine: React.Dispatch<React.SetStateAction<number>>;
-	setCol: React.Dispatch<React.SetStateAction<number>>;	
+	setCol: React.Dispatch<React.SetStateAction<number>>;
 }
 interface TextBoxContextType {
 	textAreaRef: React.RefObject<HTMLTextAreaElement>;
-	editBarType:  EditBarType;
+	editBarType: EditBarType;
 }
 
 const TextBoxContext = createContext<TextBoxContextType | undefined>(undefined);
@@ -27,14 +26,16 @@ export const TextBoxProvider: React.FC<{ children: ReactNode }> = ({
 	children,
 }) => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
+	//TODO Move cursor when user clicks on a new location
 	const [line, setLine] = useState(1);
-	const [col,setCol] = useState(1);
-    
+	const [col, setCol] = useState(1);
+
 	//for tracking current pos
-	const editBarType:  EditBarType = {
-		line, col, 
-		setLine, setCol,
+	const editBarType: EditBarType = {
+		line,
+		col,
+		setLine,
+		setCol,
 	};
 
 	return (
@@ -113,7 +114,7 @@ export const TextBox: React.FC = () => {
 			newText = before + "\t" + after;
 			pos += 1;
 		}
-		//for the auto-indentation 
+		//for the auto-indentation
 		else if (event.key === "Enter") {
 			const posCurrentLine = before.lastIndexOf("\n") + 1;
 			const currentLine = before.substring(posCurrentLine);
@@ -123,19 +124,16 @@ export const TextBox: React.FC = () => {
 			if (before.endsWith("{")) {
 				newText = before + "\n" + indent + "\t\n" + indent + after;
 				pos = before.length + 1 + indent.length + 1;
-			}
-			else if (before.endsWith("[")) {
+			} else if (before.endsWith("[")) {
 				newText = before + "\n" + indent + "\t\n" + indent + after;
 				pos = before.length + 1 + indent.length + 1;
-
-			}
-			else if (before.endsWith("(")) {
+			} else if (before.endsWith("(")) {
 				newText = before + "\n" + indent + "\t\n" + indent + after;
 				pos = before.length + 1 + indent.length + 1;
-			}
-			else { //help keeps the pos after indenting 
+			} else {
+				//help keeps the pos after indenting
 				newText = before + "\n" + indent + after;
-				pos = before.length + 1 + indent.length ;
+				pos = before.length + 1 + indent.length;
 			}
 		}
 
@@ -153,18 +151,16 @@ export const TextBox: React.FC = () => {
 		const textArea = textAreaRef.current;
 		if (!textArea) return;
 
-		if(textArea) {
+		if (textArea) {
 			const { selectionStart } = textArea; //starting postion of text
 			const textUpToCursor = textArea.value.slice(0, selectionStart);
 			const line = textUpToCursor.split("\n");
 			const currentLine = line.length;
-			const currentCol = line[line.length -1].length;
+			const currentCol = line[line.length - 1].length;
 			editBarType.setLine(currentLine);
 			editBarType.setCol(currentCol);
 		}
-
 	};
-
 
 	useEffect(() => {
 		const textArea = textAreaRef.current;
@@ -173,7 +169,7 @@ export const TextBox: React.FC = () => {
 			textArea.addEventListener("scroll", handleScroll);
 			textArea.addEventListener("input", updateLineNum);
 			textArea.addEventListener("keydown", autoClosing);
-			textArea.addEventListener("keyup", updatePosition);//needed so it can update the line number that you are on by itself 
+			textArea.addEventListener("keyup", updatePosition); //needed so it can update the line number that you are on by itself
 			updateLineNum();
 
 			return () => {
