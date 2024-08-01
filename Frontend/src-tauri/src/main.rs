@@ -17,6 +17,7 @@ use tauri::Manager;
  */
 #[derive(Clone)]
 struct Tab {
+    // TODO: add filepath and OFD
     id: usize,
     title: String,
     content: String,
@@ -32,6 +33,7 @@ struct Tab {
 struct TabManager {
     tabs: Vec<Tab>,  // list of tabs
     active_tab: Option<usize>,  // index of the active tab
+    id: usize,
 }
 
 // implementation of functions for tabs
@@ -42,11 +44,13 @@ impl TabManager {
         TabManager {
             tabs: Vec::new(),
             active_tab: None,
+            id: 0,
         }
     }
     // creates new tab and adds it to the manager with a unique ID and everything
     fn add_tab(&mut self, title: String, content: String)  -> usize{
-        let id = self.tabs.len();
+        let id = self.id;
+        self.id += 1;  // increment id for each new tab
         self.tabs.push(Tab {
             id,
             title,
@@ -58,6 +62,7 @@ impl TabManager {
 
     // retains only the tabs with IDs different from the selected one, so effectively removes the chosen tab
     fn remove_tab(&mut self, tab_id: usize) {
+        // TODO: close OFD
         self.tabs.retain(|tab| tab.id != tab_id);
     }
 
