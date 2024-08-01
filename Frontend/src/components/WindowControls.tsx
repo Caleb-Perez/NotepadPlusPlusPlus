@@ -2,9 +2,12 @@ import React from "react";
 import { appWindow } from "@tauri-apps/api/window";
 
 const WindowControls: React.FC = () => {
-	const minimizeWindow: React.MouseEventHandler<HTMLButtonElement> = () => appWindow.minimize();
-	const maximizeWindow: React.MouseEventHandler<HTMLButtonElement> = () => appWindow.toggleMaximize();
-	const closeWindow: React.MouseEventHandler<HTMLButtonElement> = () => appWindow.close();
+	const minimizeWindow: React.MouseEventHandler<HTMLButtonElement> = () =>
+		appWindow.minimize();
+	const maximizeWindow: React.MouseEventHandler<HTMLButtonElement> = () =>
+		appWindow.toggleMaximize();
+	const closeWindow: React.MouseEventHandler<HTMLButtonElement> = () =>
+		appWindow.close();
 	return (
 		<div className="window-controls">
 			<button className="minimize" onClick={minimizeWindow}>

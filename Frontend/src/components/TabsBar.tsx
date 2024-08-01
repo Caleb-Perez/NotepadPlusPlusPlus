@@ -3,8 +3,7 @@ import Tab from "./Tab";
 // import { TabProps } from "./Tab";
 import { useTextBox } from "./Textbox";
 import { text } from "stream/consumers";
-import {invoke} from "@tauri-apps/api";
-
+import { invoke } from "@tauri-apps/api";
 
 interface TabProps {
 	id: string;
@@ -14,12 +13,14 @@ interface TabProps {
 
 async function setNextID() {
 	try {
-		const value: number = await invoke("add_tab", {title: "New Tab", content: ""});
+		const value: number = await invoke("add_tab", {
+			title: "New Tab",
+			content: "",
+		});
 		return value;
+	} catch (error) {
+		console.error("Error fetching next ID:", error);
 	}
-	catch (error) {
-        console.error("Error fetching next ID:", error);
-    }
 }
 
 const TabsBar: React.FC = () => {
