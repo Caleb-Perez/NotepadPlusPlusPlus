@@ -45,7 +45,7 @@ impl TabManager {
         }
     }
     // creates new tab and adds it to the manager with a unique ID and everything
-    fn add_tab(&mut self, title: String, content: String) {
+    fn add_tab(&mut self, title: String, content: String)  -> usize{
         let id = self.tabs.len();
         self.tabs.push(Tab {
             id,
@@ -53,6 +53,7 @@ impl TabManager {
             content,
             is_dirty: false,
         });
+        return id;
     }
 
     // retains only the tabs with IDs different from the selected one, so effectively removes the chosen tab
@@ -83,9 +84,9 @@ impl TabManager {
 
 // the following are all just wrappers for the tab manager functions. These are what the front end calls
 #[tauri::command]
-fn add_tab(state: State<'_, Mutex<TabManager>>, title: String, content: String) {
+fn add_tab(state: State<'_, Mutex<TabManager>>, title: String, content: String) -> usize {
     let mut manager = state.lock().unwrap();
-    manager.add_tab(title, content);
+    return manager.add_tab(title, content);
 }
 
 #[tauri::command]
