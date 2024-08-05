@@ -37,10 +37,11 @@ const Menu: React.FC<MenuProps> = ({ title, options }) => {
 	};
 
 	return (
-		<div className={`menu ${isActive ? "active" : ""}`} ref={dropdownRef}>
-			<div className="title" onClick={handleTitleClick}>
-				{title}
-			</div>
+		<div
+			className={`menu ${isActive ? "active" : ""}`}
+			ref={dropdownRef}
+			onClick={handleTitleClick}>
+			<div className="title">{title}</div>
 			{isActive && (
 				<ul className="dropdown">
 					{options.map((option, index) => (
