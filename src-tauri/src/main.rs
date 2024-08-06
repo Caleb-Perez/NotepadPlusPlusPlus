@@ -14,6 +14,7 @@ use serde::Serialize;
 use serde::Deserialize;
 use thiserror::Error;
 
+// custom error type that implements serde::Serialize
 #[derive(Debug, thiserror::Error)]
 enum Error {
   #[error(transparent)]
