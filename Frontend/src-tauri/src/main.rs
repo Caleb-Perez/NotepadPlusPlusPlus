@@ -2,11 +2,33 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::fs;
+use std::fs::OpenOptions;
 use regex::Regex;
 use lazy_static::lazy_static;
 use std::sync::Mutex;
 use tauri::State;
 use tauri::Manager;
+use std::io;
+use std::io::Write;
+use serde::Serialize;
+use serde::Deserialize;
+use thiserror::Error;
+
+#[derive(Debug, thiserror::Error)]
+enum Error {
+  #[error(transparent)]
+  Io(#[from] std::io::Error)
+}
+
+// we must manually implement serde::Serialize
+impl serde::Serialize for Error {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where
+    S: serde::ser::Serializer,
+  {
+    serializer.serialize_str(self.to_string().as_ref())
+  }
+}
 
 // tab struct
 /*
@@ -15,13 +37,14 @@ use tauri::Manager;
  * content is the actual content itself
  * is_dirty indicates if there are unsaved changes
  */
-#[derive(Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct Tab {
     // TODO: add filepath and OFD
     id: usize,
     title: String,
     content: String,
     is_dirty: bool,  // indicates if there are unsaved changes
+    file: String, // filepath
 }
 
 // tab manager struct
@@ -30,6 +53,7 @@ struct Tab {
  * active_tab is well, you know, the active tab...
  * not sure how necessary active_tab is but you never know
  */
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct TabManager {
     tabs: Vec<Tab>,  // list of tabs
     active_tab: Option<usize>,  // index of the active tab
@@ -56,8 +80,33 @@ impl TabManager {
             title,
             content,
             is_dirty: false,
+            file: String::new(),
         });
         return id;
+    }
+
+    // same as add_tab, but pre-loads the content from a file
+    fn add_tab_file(&mut self, title: String, file_path: &str) -> Result<usize, Error> {
+        let id = self.id;
+        self.id += 1;  // increment id for each new tab
+        let content = fs::read_to_string(file_path)?;
+        self.tabs.push(Tab {
+            id,
+            title,
+            content,
+            is_dirty: false,
+            file: String::new(),
+        });
+        Ok(id)
+    }
+
+    // getter for tab content
+    fn get_content(&mut self, tab_id: usize) -> String {
+        if let Some(tab) = self.tabs.iter_mut().find(|tab| tab.id == tab_id) {
+            tab.content.clone()
+        } else {
+            String::new()
+        }
     }
 
     // retains only the tabs with IDs different from the selected one, so effectively removes the chosen tab
@@ -84,6 +133,27 @@ impl TabManager {
     // getter for active tab
     fn get_active_tab(&self) -> Option<&Tab> {
         self.active_tab.and_then(|id| self.tabs.iter().find(|tab| tab.id == id))
+    }
+
+    // finds selected tab in the manager and saves its content to a file
+    fn save_to_file(&mut self, id: usize, file_path: &str) -> Result<(), Error> {
+        if let Some(tab) = self.tabs.iter_mut().find(|t| t.id == id) {
+
+            // Open for writing. If exists, append. If not, create new
+            let mut file = OpenOptions::new()
+            .write(true)
+            .append(true)
+            .create(true)
+            .open(file_path)?;
+
+            // write (as bytes needed since Rust likes to be weird)
+            file.write_all(tab.content.as_bytes())?;
+
+            // update filepath and mark not dirty
+            tab.file = file_path.to_string();
+            tab.is_dirty = false;
+        }
+        Ok(())
     }
 }
 
@@ -116,6 +186,24 @@ fn update_tab_content(state: State<'_, Mutex<TabManager>>, tab_id: usize, conten
 fn get_active_tab(state: State<'_, Mutex<TabManager>>) -> Option<Tab> {
     let manager = state.lock().unwrap();
     manager.get_active_tab().cloned()
+}
+
+#[tauri::command]
+fn save_to_file(state: State<'_, Mutex<TabManager>>, tab_id: usize, file_path: String) -> Result<(), Error> {
+    let mut manager = state.lock().unwrap();
+    manager.save_to_file(tab_id, &file_path)
+}
+
+#[tauri::command]
+fn add_tab_file(state: State<'_, Mutex<TabManager>>, title: String, file_path: String) -> Result<usize, Error> {
+    let mut manager = state.lock().unwrap();
+    return manager.add_tab_file(title, &file_path)
+}
+
+#[tauri::command]
+fn get_content(state: State<'_, Mutex<TabManager>>, tab_id: usize) -> String {
+    let mut manager = state.lock().unwrap();
+    return manager.get_content(tab_id)
 }
 
 // greet command for random testing
@@ -188,7 +276,8 @@ fn main() {
         .manage(Mutex::new(TabManager::new()))
         .invoke_handler(tauri::generate_handler![
             greet, find_and_replace, save_str, foo,
-            add_tab, remove_tab, switch_tab, update_tab_content
+            add_tab, remove_tab, switch_tab, update_tab_content,
+            save_to_file, add_tab_file, get_content
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
