@@ -104,9 +104,9 @@ impl TabManager {
     // getter for tab content
     fn get_content(&mut self, tab_id: usize) -> String {
         if let Some(tab) = self.tabs.iter_mut().find(|tab| tab.id == tab_id) {
-            tab.content.clone()
+            return tab.content.clone();
         } else {
-            String::new()
+            return String::new();
         }
     }
 
@@ -143,8 +143,8 @@ impl TabManager {
             // Open for writing. If exists, append. If not, create new
             let mut file = OpenOptions::new()
             .write(true)
-            .append(true)
             .create(true)
+            .truncate(true)
             .open(file_path)?;
 
             // write (as bytes needed since Rust likes to be weird)
