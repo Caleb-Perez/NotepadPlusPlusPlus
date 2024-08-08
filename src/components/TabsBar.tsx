@@ -44,7 +44,7 @@ const TabsBar: React.FC = () => {
 	const { textAreaRef } = useTextBox();
 
 	const handleKeyDown = async (event: KeyboardEvent) => {
-		if (event.ctrlKey && event.key === "o") {
+		if ((event.ctrlKey || event.metaKey) && event.key === "o") {
 			event.preventDefault();
 
 			// get path to selected file
@@ -61,7 +61,7 @@ const TabsBar: React.FC = () => {
 			console.log("ctrl+O pressed");
 		}
 
-		if (event.ctrlKey && event.key === "s") {
+		if ((event.ctrlKey || event.metaKey) && event.key === "s") {
 			event.preventDefault();
 			const filepath = await save({
 				filters: [{
@@ -75,6 +75,11 @@ const TabsBar: React.FC = () => {
 					filePath: filepath,
 				});
 			}
+		}
+		if ((event.ctrlKey || event.metaKey) && event.key === "t") {
+			event.preventDefault();
+			await addTab();
+			console.log("ctrl+T pressed")
 		}
 	};
 
