@@ -7,7 +7,7 @@ import React, {
 	useState,
 } from "react";
 import { EndOfLineState } from "typescript";
-
+import { Editor } from "@monaco-editor/react";
 interface EditBarType {
 	//base on cursor pos
 	line: number;
@@ -54,134 +54,142 @@ export const useTextBox = (): TextBoxContextType => {
 };
 
 export const TextBox: React.FC = () => {
-	const { textAreaRef, editBarType } = useTextBox();
-	const lineNumberRef = useRef<HTMLDivElement>(null);
+	// const { textAreaRef, editBarType } = useTextBox();
+	// const lineNumberRef = useRef<HTMLDivElement>(null);
 
-	const updateLineNum = () => {
-		if (
-			lineNumberRef.current &&
-			textAreaRef &&
-			"current" in textAreaRef &&
-			textAreaRef.current
-		) {
-			const textLines = textAreaRef.current.value.split("\n");
-			const displayLines = Math.max(textLines.length, 50);
-			const lineNUmbers = Array.from(
-				{ length: displayLines },
-				(_, index) => index + 1
-			);
-			lineNumberRef.current.innerHTML = lineNUmbers.join("<br>");
-		}
-	};
+	// const updateLineNum = () => {
+	// 	if (
+	// 		lineNumberRef.current &&
+	// 		textAreaRef &&
+	// 		"current" in textAreaRef &&
+	// 		textAreaRef.current
+	// 	) {
+	// 		const textLines = textAreaRef.current.value.split("\n");
+	// 		const displayLines = Math.max(textLines.length, 50);
+	// 		const lineNUmbers = Array.from(
+	// 			{ length: displayLines },
+	// 			(_, index) => index + 1
+	// 		);
+	// 		lineNumberRef.current.innerHTML = lineNUmbers.join("<br>");
+	// 	}
+	// };
 
-	const handleScroll = () => {
-		if (
-			lineNumberRef.current &&
-			textAreaRef &&
-			"current" in textAreaRef &&
-			textAreaRef.current
-		) {
-			lineNumberRef.current.scrollTop = textAreaRef.current.scrollTop;
-		}
-	};
+	// const handleScroll = () => {
+	// 	if (
+	// 		lineNumberRef.current &&
+	// 		textAreaRef &&
+	// 		"current" in textAreaRef &&
+	// 		textAreaRef.current
+	// 	) {
+	// 		lineNumberRef.current.scrollTop = textAreaRef.current.scrollTop;
+	// 	}
+	// };
 
-	const autoClosing = (event: KeyboardEvent) => {
-		const textArea = textAreaRef.current;
-		if (!textArea) return;
+	// const autoClosing = (event: KeyboardEvent) => {
+	// 	const textArea = textAreaRef.current;
+	// 	if (!textArea) return;
 
-		let pos = textArea.selectionStart;
-		const before = textArea.value.substr(0, pos);
-		const after = textArea.value.substr(pos, textArea.value.length);
+	// 	let pos = textArea.selectionStart;
+	// 	const before = textArea.value.substr(0, pos);
+	// 	const after = textArea.value.substr(pos, textArea.value.length);
 
-		let newText = textArea.value;
+	// 	let newText = textArea.value;
 
-		if (event.key === "{") {
-			newText = before + "{}" + after;
-			pos += 1;
-		} else if (event.key === "[") {
-			newText = before + "[]" + after;
-			pos += 1;
-		} else if (event.key === "(") {
-			newText = before + "()" + after;
-			pos += 1;
-		} else if (event.key === "'") {
-			newText = before + "''" + after;
-			pos += 1;
-		} else if (event.key === '"') {
-			newText = before + '""' + after;
-			pos += 1;
-		} else if (event.key === "Tab") {
-			newText = before + "\t" + after;
-			pos += 1;
-		}
-		//for the auto-indentation
-		else if (event.key === "Enter") {
-			const posCurrentLine = before.lastIndexOf("\n") + 1;
-			const currentLine = before.substring(posCurrentLine);
-			const currentIndent = currentLine.match(/^\s*/);
-			const indent = currentIndent ? currentIndent[0] : "";
+	// 	if (event.key === "{") {
+	// 		newText = before + "{}" + after;
+	// 		pos += 1;
+	// 	} else if (event.key === "[") {
+	// 		newText = before + "[]" + after;
+	// 		pos += 1;
+	// 	} else if (event.key === "(") {
+	// 		newText = before + "()" + after;
+	// 		pos += 1;
+	// 	} else if (event.key === "'") {
+	// 		newText = before + "''" + after;
+	// 		pos += 1;
+	// 	} else if (event.key === '"') {
+	// 		newText = before + '""' + after;
+	// 		pos += 1;
+	// 	} else if (event.key === "Tab") {
+	// 		newText = before + "\t" + after;
+	// 		pos += 1;
+	// 	}
+	// 	//for the auto-indentation
+	// 	else if (event.key === "Enter") {
+	// 		const posCurrentLine = before.lastIndexOf("\n") + 1;
+	// 		const currentLine = before.substring(posCurrentLine);
+	// 		const currentIndent = currentLine.match(/^\s*/);
+	// 		const indent = currentIndent ? currentIndent[0] : "";
 
-			if (before.endsWith("{")) {
-				newText = before + "\n" + indent + "\t\n" + indent + after;
-				pos = before.length + 1 + indent.length + 1;
-			} else if (before.endsWith("[")) {
-				newText = before + "\n" + indent + "\t\n" + indent + after;
-				pos = before.length + 1 + indent.length + 1;
-			} else if (before.endsWith("(")) {
-				newText = before + "\n" + indent + "\t\n" + indent + after;
-				pos = before.length + 1 + indent.length + 1;
-			} else {
-				//help keeps the pos after indenting
-				newText = before + "\n" + indent + after;
-				pos = before.length + 1 + indent.length;
-			}
-		}
+	// 		if (before.endsWith("{")) {
+	// 			newText = before + "\n" + indent + "\t\n" + indent + after;
+	// 			pos = before.length + 1 + indent.length + 1;
+	// 		} else if (before.endsWith("[")) {
+	// 			newText = before + "\n" + indent + "\t\n" + indent + after;
+	// 			pos = before.length + 1 + indent.length + 1;
+	// 		} else if (before.endsWith("(")) {
+	// 			newText = before + "\n" + indent + "\t\n" + indent + after;
+	// 			pos = before.length + 1 + indent.length + 1;
+	// 		} else {
+	// 			//help keeps the pos after indenting
+	// 			newText = before + "\n" + indent + after;
+	// 			pos = before.length + 1 + indent.length;
+	// 		}
+	// 	}
 
-		if (newText !== textArea.value) {
-			event.preventDefault();
-			textArea.value = newText; //update
-			textArea.selectionStart = pos;
-			textArea.selectionEnd = pos;
-			textArea.value = newText; //update
-			setTimeout(updateLineNum, 0);
-		}
-	};
+	// 	if (newText !== textArea.value) {
+	// 		event.preventDefault();
+	// 		textArea.value = newText; //update
+	// 		textArea.selectionStart = pos;
+	// 		textArea.selectionEnd = pos;
+	// 		textArea.value = newText; //update
+	// 		setTimeout(updateLineNum, 0);
+	// 	}
+	// };
 
-	const updatePosition = () => {
-		const textArea = textAreaRef.current;
-		if (!textArea) return;
+	// const updatePosition = () => {
+	// 	const textArea = textAreaRef.current;
+	// 	if (!textArea) return;
 
-		if (textArea) {
-			const { selectionStart } = textArea; //starting postion of text
-			const textUpToCursor = textArea.value.slice(0, selectionStart);
-			const line = textUpToCursor.split("\n");
-			const currentLine = line.length;
-			const currentCol = line[line.length - 1].length;
-			editBarType.setLine(currentLine);
-			editBarType.setCol(currentCol);
-		}
-	};
+	// 	if (textArea) {
+	// 		const { selectionStart } = textArea; //starting postion of text
+	// 		const textUpToCursor = textArea.value.slice(0, selectionStart);
+	// 		const line = textUpToCursor.split("\n");
+	// 		const currentLine = line.length;
+	// 		const currentCol = line[line.length - 1].length;
+	// 		editBarType.setLine(currentLine);
+	// 		editBarType.setCol(currentCol);
+	// 	}
+	// };
 
-	useEffect(() => {
-		const textArea = textAreaRef.current;
+	// useEffect(() => {
+	// 	const textArea = textAreaRef.current;
 
-		if (textArea) {
-			textArea.addEventListener("scroll", handleScroll);
-			textArea.addEventListener("input", updateLineNum);
-			textArea.addEventListener("keydown", autoClosing);
-			textArea.addEventListener("keyup", updatePosition); //needed so it can update the line number that you are on by itself
-			updateLineNum();
+	// 	if (textArea) {
+	// 		textArea.addEventListener("scroll", handleScroll);
+	// 		textArea.addEventListener("input", updateLineNum);
+	// 		textArea.addEventListener("keydown", autoClosing);
+	// 		textArea.addEventListener("keyup", updatePosition); //needed so it can update the line number that you are on by itself
+	// 		updateLineNum();
 
-			return () => {
-				textArea.removeEventListener("scroll", handleScroll);
-				textArea.removeEventListener("input", updateLineNum);
-				textArea.removeEventListener("keydown", autoClosing);
-				textArea.removeEventListener("keyup", updatePosition);
-			};
-		}
-	}, []);
+	// 		return () => {
+	// 			textArea.removeEventListener("scroll", handleScroll);
+	// 			textArea.removeEventListener("input", updateLineNum);
+	// 			textArea.removeEventListener("keydown", autoClosing);
+	// 			textArea.removeEventListener("keyup", updatePosition);
+	// 		};
+	// 	}
+	// }, []);
 
 	return (
+		<Editor
+			height="90vh"
+			defaultLanguage="javascript"
+			defaultValue="// some comment"
+		/>
+	);
+	{
+		/*}
 		<div className="text-container">
 			<div className="line-numbers" ref={lineNumberRef} />
 			<textarea
@@ -191,9 +199,8 @@ export const TextBox: React.FC = () => {
 				placeholder="Type your text here..."
 				onScroll={handleScroll}
 			/>
-		</div>
-	);
+		</div> */
+	}
 };
 
 export default TextBoxProvider;
-
