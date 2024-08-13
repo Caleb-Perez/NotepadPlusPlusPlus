@@ -31,15 +31,16 @@ export const TextBoxProvider: React.FC<{ children: ReactNode }> = ({
 };
 
 export const useTextBox =
-	(): monacoEditor.editor.IStandaloneCodeEditor | null => {
+	(): React.MutableRefObject<monacoEditor.editor.IStandaloneCodeEditor | null> => {
 		const context = useContext(TextBoxContext);
 		if (!context) {
 			throw new Error("useTextBox must be used within a TextBoxProvider");
 		}
-		return context.editorRef.current;
+		return context.editorRef;
 	};
 
 export const TextBox: React.FC = () => {
+	const editorRef = useTextBox();
 	const [IsThemeLoaded, setIsThemeLoaded] = useState(false);
 
 	useEffect(() => {
@@ -62,21 +63,22 @@ export const TextBox: React.FC = () => {
 	}
 
 	const handleEditorMount: OnMount = (editor, monaco) => {
-		let context = useTextBox();
 		if (editor) {
-			// Example: Add event listener for c
-			// context = editor;
-			editor.onDidChangeModelContent(() => {
-				console.log("Editor content changed");
-				console.log(editor.getValue());
-			});
+			if (editorRef) {
+				editorRef.current = editor;
+			}
+
+			// editor.onDidChangeModelContent(() => {
+			// 	console.log("Editor content changed");
+			// 	console.log(editor.getValue());
+			// });
 
 			// Example: Add event listener for cursor position changes
 			editor.onDidChangeCursorPosition(() => {
 				const position = editor.getPosition();
-				console.log(
-					`Cursor moved to line ${position?.lineNumber}, column ${position?.column}`
-				);
+				// console.log(
+				// 	`Cursor moved to line ${position?.lineNumber}, column ${position?.column}`
+				// );
 			});
 		}
 	};
@@ -84,7 +86,7 @@ export const TextBox: React.FC = () => {
 		<Editor
 			theme="myTheme"
 			height="90vh"
-			defaultLanguage="javascript"
+			defaultLanguage={"javascript"}
 			defaultValue=""
 			onMount={handleEditorMount}
 		/>
