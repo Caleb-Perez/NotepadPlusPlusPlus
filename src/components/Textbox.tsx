@@ -7,7 +7,7 @@ import React, {
 	useState,
 } from "react";
 import { EndOfLineState } from "typescript";
-import { Editor } from "@monaco-editor/react";
+import { Editor, loader} from "@monaco-editor/react";
 interface EditBarType {
 	//base on cursor pos
 	line: number;
@@ -180,9 +180,31 @@ export const TextBox: React.FC = () => {
 	// 		};
 	// 	}
 	// }, []);
+    const [IsThemeLoaded, setIsThemeLoaded] = useState(false);
 
+	useEffect(() => {
+		loader.init().then((monacoInstance) => {
+			monacoInstance.editor.defineTheme('myTheme', {
+				base: "vs-dark",
+				inherit: true,
+				rules: [],
+				colors: {
+					'editor.background': '#1c1c1c',
+				},
+			});
+			monacoInstance.editor.setTheme('myTheme');
+			setIsThemeLoaded(true);
+		});
+	}, []);
+
+	if (!IsThemeLoaded) {
+		return null;
+	}
+		
 	return (
+
 		<Editor
+		    theme = "myTheme"
 			height="90vh"
 			defaultLanguage="javascript"
 			defaultValue="// some comment"

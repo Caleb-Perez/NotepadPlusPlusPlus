@@ -96,6 +96,10 @@
 	margin: 0px;
 }
 
+.text-container{
+	background-color: #000000;
+}
+
 .window-controls button {
 	background: none;
 	border: none;
