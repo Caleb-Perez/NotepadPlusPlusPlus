@@ -17,175 +17,182 @@ interface TabProps {
 	content: string;
 }
 
-async function setNextID() {
-	try {
-		const value: number = await invoke("add_tab", {
-			title: "New Tab",
-			content: "",
-		});
-		return value;
-	} catch (error) {
-		console.error("Error fetching next ID:", error);
-	}
-}
+// async function setNextID() {
+// 	try {
+// 		const value: number = await invoke("add_tab", {
+// 			title: "New Tab",
+// 			content: "",
+// 		});
+// 		return value;
+// 	} catch (error) {
+// 		console.error("Error fetching next ID:", error);
+// 	}
+// }
 
-async function setNextIDFile(path: string) {
-	try {
-		const value: number = await invoke("add_tab_file", {
-			title: path,
-			filePath: path,
-		});
-		return value;
-	} catch (error) {
-		console.error("Error setting next ID file:", error);
-	}
-}
+// async function setNextIDFile(path: string) {
+// 	try {
+// 		const value: number = await invoke("add_tab_file", {
+// 			title: path,
+// 			filePath: path,
+// 		});
+// 		return value;
+// 	} catch (error) {
+// 		console.error("Error setting next ID file:", error);
+// 	}
+// }
 
 const TabsBar: React.FC = () => {
 	const [tabs, setTabs] = useState<TabProps[]>([]);
-	// const [nextID, setNextID] = useState(0);
+	const [nextID, setNextID] = useState(0);
 	const [activeTab, setActiveTab] = useState("0");
 	const textAreaRef = useTextBox();
+	const [contentChangeDisposable, setContentChangeDisposable] =
+		useState<monaco.IDisposable | null>(null);
 
 	const handleKeyDown = async (event: KeyboardEvent) => {
-		if ((event.ctrlKey || event.metaKey) && event.key === "o") {
-			event.preventDefault();
-
-			// get path to selected file
-			const selected = await open({
-				multiple: false,
-				filters: [
-					{
-						name: "Text files",
-						extensions: ["txt"],
-					},
-				],
-			});
-			if (typeof selected === "string") {
-				await addTabFile(selected);
-			}
-			console.log("ctrl+O pressed");
-		}
-
-		if ((event.ctrlKey || event.metaKey) && event.key === "s") {
-			event.preventDefault();
-			const filepath = await save({
-				filters: [
-					{
-						name: "Text Files",
-						extensions: ["txt", "md"],
-					},
-				],
-			});
-			if (filepath != null) {
-				invoke("save_to_file", {
-					tabId: parseInt(activeTab),
-					filePath: filepath,
-				});
-			}
-		}
-		if ((event.ctrlKey || event.metaKey) && event.key === "t") {
-			event.preventDefault();
-			await addTab();
-			console.log("ctrl+T pressed");
-		}
+		// if ((event.ctrlKey || event.metaKey) && event.key === "o") {
+		// 	event.preventDefault();
+		// 	// get path to selected file
+		// 	// const selected = await open({
+		// 	// 	multiple: false,
+		// 	// 	filters: [
+		// 	// 		{
+		// 	// 			name: "Text files",
+		// 	// 			extensions: ["txt"],
+		// 	// 		},
+		// 	// 	],
+		// 	// });
+		// 	// if (typeof selected === "string") {
+		// 	// 	await addTabFile(selected);
+		// 	// }
+		// 	console.log("ctrl+O pressed");
+		// }
+		// if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+		// 	event.preventDefault();
+		// 	const filepath = await save({
+		// 		filters: [
+		// 			{
+		// 				name: "Text Files",
+		// 				extensions: ["txt", "md"],
+		// 			},
+		// 		],
+		// 	});
+		// 	if (filepath != null) {
+		// 		invoke("save_to_file", {
+		// 			tabId: parseInt(activeTab),
+		// 			filePath: filepath,
+		// 		});
+		// 	}
+		// }
+		// if ((event.ctrlKey || event.metaKey) && event.key === "t") {
+		// 	event.preventDefault();
+		// 	await addTab();
+		// 	console.log("ctrl+T pressed");
+		// }
 	};
 
-	const addTab = async () => {
+	const addTab = () => {
 		//TODO FIX ACCORDING TO ALREADY EXISITING TAB PROPS
-		const nextID = await setNextID();
-		if (nextID != null) {
-			const newTab: TabProps = {
-				label: `Tab ${nextID}`,
-				id: nextID.toString(),
-				className: "tab",
-				content: "",
-			};
+		const newTab: TabProps = {
+			label: `Tab ${nextID}`,
+			id: nextID.toString(),
+			className: "tab",
+			content: "",
+		};
+		setNextID(nextID + 1);
+		setTabs((prevTabs) => [...prevTabs, newTab]);
+		changeTab(newTab.id);
 
-			setActiveTab(newTab.id);
-			// setNextID(nextID + 1);
-			setTabs((prevTabs) => [...prevTabs, newTab]);
-			if (textAreaRef && "current" in textAreaRef && textAreaRef.current)
-				textAreaRef?.current.focus();
-		}
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current)
+			textAreaRef?.current.focus();
 	};
 
-	const addTabFile = async (path: string) => {
-		// creates tab in backend
-		const nextID = await setNextIDFile(path);
+	// const addTabFile = async (path: string) => {
+	// 	// creates tab in backend
+	// 	const nextID = await setNextIDFile(path);
 
-		// creates tab in frontend
-		if (nextID != null) {
-			const newTab: TabProps = {
-				label: `Tab ${nextID}`,
-				id: nextID.toString(),
-				className: "tab",
-				content: "",
-			};
+	// 	// creates tab in frontend
+	// 	if (nextID != null) {
+	// 		const newTab: TabProps = {
+	// 			label: `Tab ${nextID}`,
+	// 			id: nextID.toString(),
+	// 			className: "tab",
+	// 			content: "",
+	// 		};
 
-			setActiveTab(newTab.id);
-			// setNextID(nextID + 1);
-			setTabs((prevTabs) => [...prevTabs, newTab]);
-			if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-				textAreaRef?.current.focus();
-			}
-		}
-	};
+	// 		setActiveTab(newTab.id);
+	// 		// setNextID(nextID + 1);
+	// 		setTabs((prevTabs) => [...prevTabs, newTab]);
+	// 		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+	// 			textAreaRef?.current.focus();
+	// 		}
+	// 	}
+	// };
 
 	const deleteTab = (id: string) => {
 		setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== id));
+		changeTab(tabs[tabs.length - 1].id);
+	};
+
+	const changeTab = (id: string) => {
+		contentChangeDisposable?.dispose();
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+			setContentChangeDisposable(
+				textAreaRef.current.onDidChangeModelContent(() => {
+					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+						const atab = tabs.find((tab) => tab.id === id);
+						if (atab) {
+							console.log(
+								`Bye content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
+							);
+							atab.content = textAreaRef.current.getValue();
+						}
+					}
+				})
+			);
+		}
+
+		setActiveTab(id);
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+			console.log(
+				`Tab ${parseInt(activeTab)} is currently "${
+					tabs.find((tab) => tab.id === activeTab)?.content
+				}"`
+			);
+		}
+		if (activeTab != id) {
+			if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+				const newActiveTab = tabs.find((tab) => tab.id === id);
+				if (newActiveTab) {
+					console.log(
+						`Active tab is currently ${activeTab}, but supposed to be ${id}`
+					);
+					textAreaRef.current.setValue(newActiveTab.content);
+				}
+			}
+		}
+
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current)
+			textAreaRef?.current.focus();
 	};
 
 	useEffect(() => {
 		let contentChangeDisposable: monaco.IDisposable | null = null;
+		const atab = tabs.find((tab) => tab.id === activeTab);
 		if (tabs.length === 0) {
-			setActiveTab("0");
+			addTab();
 		} else if (activeTab && !tabs.find((tab) => tab.id === activeTab)) {
 			setActiveTab(tabs[tabs.length - 1].id);
 		}
 
 		window.addEventListener("keydown", handleKeyDown);
 		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-			contentChangeDisposable = textAreaRef.current.onDidChangeModelContent(
-				() => {
-					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-						tabs[parseInt(activeTab)].content = textAreaRef.current.getValue();
-					}
-				}
-			);
 		}
 
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
-			contentChangeDisposable?.dispose();
-			if (contentChangeDisposable) {
-				console.log("DISPOSED");
-				contentChangeDisposable.dispose();
-			}
 		};
 	}, [tabs, activeTab]);
-
-	const changeTab = (id: string) => {
-		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-			console.log(
-				`Tab ${parseInt(activeTab)} is currently "${
-					tabs[parseInt(activeTab)].content
-				}"`
-			);
-		}
-		if (activeTab != id) {
-			if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-				textAreaRef.current.setValue(tabs[parseInt(activeTab)].content);
-				console.log(
-					`content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
-				);
-			}
-
-			setActiveTab(id);
-		}
-		if (textAreaRef && "current" in textAreaRef && textAreaRef.current)
-			textAreaRef?.current.focus();
-	};
 
 	return (
 		<div className="editor-tabs">
