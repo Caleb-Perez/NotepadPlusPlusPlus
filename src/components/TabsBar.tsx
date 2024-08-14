@@ -157,15 +157,14 @@ const TabsBar: React.FC = () => {
 	// };
 
 	const deleteTab = (id: string) => {
-		// if (tabs.length == 1) {
-		// 	appWindow.close();
-		// }
-		// if (id == tabs[tabs.length - 1].id) {
-		// 	changeTab(tabs[tabs.length - 2].id);
-		// } else {
-		// 	changeTab(tabs[tabs.length - 1].id);
-		// }
-		changeTab(tabs[tabs.length - 1].id);
+		if (tabs.length == 1) {
+			appWindow.close();
+		}
+		if (id == tabs[tabs.length - 1].id) {
+			changeTab(tabs[tabs.length - 2].id);
+		} else {
+			changeTab(tabs[tabs.length - 1].id);
+		}
 		setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== id));
 	};
 
