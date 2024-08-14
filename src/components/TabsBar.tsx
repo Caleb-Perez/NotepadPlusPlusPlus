@@ -8,6 +8,7 @@ import { open } from "@tauri-apps/api/dialog";
 import { save } from "@tauri-apps/api/dialog";
 import { Editor, loader, OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
+import { appWindow } from "@tauri-apps/api/window";
 import logo from "../assets/logo.png";
 
 interface TabProps {
@@ -92,31 +93,39 @@ const TabsBar: React.FC = () => {
 	};
 
 	const addTab = () => {
-		//TODO FIX ACCORDING TO ALREADY EXISITING TAB PROPS
 		const newTab: TabProps = {
 			label: `Tab ${nextID}`,
 			id: nextID.toString(),
 			className: "tab",
 			content: "",
 		};
-		setTabs((prevTabs) => [...prevTabs, newTab]);
-		changeTab(newTab.id);
-		console.log(tabs.length);
-		setNextID(nextID + 1);
 
-		contentChangeDisposable?.dispose();
-		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-			textAreaRef.current.setValue("");
+		setTabs((prevTabs) => [...prevTabs, newTab]);
+		setNextID(nextID + 1);
+		setActiveTab(newTab.id);
+	};
+
+	useEffect(() => {
+		if (!activeTab) return;
+
+		const atab = tabs.find((tab) => tab.id === activeTab);
+		if (
+			textAreaRef &&
+			"current" in textAreaRef &&
+			textAreaRef.current &&
+			atab
+		) {
+			contentChangeDisposable?.dispose();
+
+			textAreaRef.current.setValue(atab.content || "");
+
 			setContentChangeDisposable(
 				textAreaRef.current.onDidChangeModelContent(() => {
 					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-						const atab = tabs.find((tab) => tab.id === newTab.id);
-						if (atab) {
-							console.log(
-								`Bye content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
-							);
-							atab.content = textAreaRef.current.getValue();
-						}
+						console.log(
+							`Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
+						);
+						atab.content = textAreaRef.current.getValue();
 					}
 				})
 			);
@@ -125,8 +134,7 @@ const TabsBar: React.FC = () => {
 		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
 			textAreaRef?.current.focus();
 		}
-	};
-
+	}, [tabs, activeTab]);
 	// const addTabFile = async (path: string) => {
 	// 	// creates tab in backend
 	// 	const nextID = await setNextIDFile(path);
@@ -150,8 +158,16 @@ const TabsBar: React.FC = () => {
 	// };
 
 	const deleteTab = (id: string) => {
-		setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== id));
+		// if (tabs.length == 1) {
+		// 	appWindow.close();
+		// }
+		// if (id == tabs[tabs.length - 1].id) {
+		// 	changeTab(tabs[tabs.length - 2].id);
+		// } else {
+		// 	changeTab(tabs[tabs.length - 1].id);
+		// }
 		changeTab(tabs[tabs.length - 1].id);
+		setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== id));
 	};
 
 	const changeTab = (id: string) => {
@@ -180,15 +196,11 @@ const TabsBar: React.FC = () => {
 				}"`
 			);
 		}
-		if (activeTab != id) {
-			if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-				const newActiveTab = tabs.find((tab) => tab.id === id);
-				if (newActiveTab) {
-					console.log(
-						`Active tab is currently ${activeTab}, but supposed to be ${id}`
-					);
-					textAreaRef.current.setValue(newActiveTab.content);
-				}
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+			const newActiveTab = tabs.find((tab) => tab.id === id);
+			if (newActiveTab) {
+				// console.log(	// 	`Active tab is currently ${activeTab}, but supposed to be ${id}`			// );
+				textAreaRef.current.setValue(newActiveTab.content);
 			}
 		}
 
@@ -197,7 +209,6 @@ const TabsBar: React.FC = () => {
 	};
 
 	useEffect(() => {
-		let contentChangeDisposable: monaco.IDisposable | null = null;
 		const atab = tabs.find((tab) => tab.id === activeTab);
 		if (tabs.length === 0) {
 			addTab();
