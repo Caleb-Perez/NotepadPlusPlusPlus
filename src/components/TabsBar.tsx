@@ -18,29 +18,29 @@ interface TabProps {
 	content: string;
 }
 
-// async function setNextID() {
-// 	try {
-// 		const value: number = await invoke("add_tab", {
-// 			title: "New Tab",
-// 			content: "",
-// 		});
-// 		return value;
-// 	} catch (error) {
-// 		console.error("Error fetching next ID:", error);
-// 	}
-// }
+async function spawnTab() {
+	try {
+		const value: number = await invoke("add_tab", {
+			title: "",
+			content: "",
+		});
+		return value;
+	} catch (error) {
+		console.error("Error fetching next ID:", error);
+	}
+}
 
-// async function setNextIDFile(path: string) {
-// 	try {
-// 		const value: number = await invoke("add_tab_file", {
-// 			title: path,
-// 			filePath: path,
-// 		});
-// 		return value;
-// 	} catch (error) {
-// 		console.error("Error setting next ID file:", error);
-// 	}
-// }
+async function spawnTabFile(path: string) {
+	try {
+		const value: number = await invoke("add_tab_file", {
+			title: path,
+			filePath: path,
+		});
+		return value;
+	} catch (error) {
+		console.error("Error setting next ID file:", error);
+	}
+}
 
 const TabsBar: React.FC = () => {
 	const [tabs, setTabs] = useState<TabProps[]>([]);
@@ -51,58 +51,89 @@ const TabsBar: React.FC = () => {
 		useState<monaco.IDisposable | null>(null);
 
 	const handleKeyDown = async (event: KeyboardEvent) => {
-		// if ((event.ctrlKey || event.metaKey) && event.key === "o") {
-		// 	event.preventDefault();
-		// 	// get path to selected file
-		// 	// const selected = await open({
-		// 	// 	multiple: false,
-		// 	// 	filters: [
-		// 	// 		{
-		// 	// 			name: "Text files",
-		// 	// 			extensions: ["txt"],
-		// 	// 		},
-		// 	// 	],
-		// 	// });
-		// 	// if (typeof selected === "string") {
-		// 	// 	await addTabFile(selected);
-		// 	// }
-		// 	console.log("ctrl+O pressed");
-		// }
-		// if ((event.ctrlKey || event.metaKey) && event.key === "s") {
-		// 	event.preventDefault();
-		// 	const filepath = await save({
-		// 		filters: [
-		// 			{
-		// 				name: "Text Files",
-		// 				extensions: ["txt", "md"],
-		// 			},
-		// 		],
-		// 	});
-		// 	if (filepath != null) {
-		// 		invoke("save_to_file", {
-		// 			tabId: parseInt(activeTab),
-		// 			filePath: filepath,
-		// 		});
-		// 	}
-		// }
-		// if ((event.ctrlKey || event.metaKey) && event.key === "t") {
-		// 	event.preventDefault();
-		// 	await addTab();
-		// 	console.log("ctrl+T pressed");
-		// }
+		if ((event.ctrlKey || event.metaKey) && event.key === "o") {
+			event.preventDefault();
+			// get path to selected file
+			const selected = await open({
+				multiple: false,
+				filters: [
+					{
+						name: "Text files",
+						extensions: ["txt"],
+					},
+				],
+			});
+			if (typeof selected === "string") {
+				addTab(selected);
+			}
+			console.log("ctrl+O pressed");
+		}
+		if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+			event.preventDefault();
+			const filepath = await save({
+				filters: [
+					{
+						name: "Text Files",
+						extensions: ["txt", "md"],
+					},
+				],
+			});
+			if (filepath != null) {
+				await invoke("save_to_file", {
+					tabId: parseInt(activeTab),
+					filePath: filepath,
+				});
+				console.log("ctrl+S pressed, tab " + activeTab + " saved to: " + filepath);
+			}
+			else {
+				console.log("ctrl+S pressed, no file selected");
+			}
+		}
+		if ((event.ctrlKey || event.metaKey) && event.key === "t") {
+			event.preventDefault();
+			await addTab();
+			console.log("ctrl+T pressed");
+		}
 	};
 
-	const addTab = () => {
-		const newTab: TabProps = {
-			label: `Tab ${nextID}`,
-			id: nextID.toString(),
-			className: "tab",
-			content: "",
-		};
+	const addTab = async (path?: string) => {
+		if (path) {
+			let tabid = await spawnTabFile(path); // create tab in back end with path
+			if (tabid) {
+				const newTab: TabProps = {
+					label: `Tab ${tabid.toString()}`,
+					id: tabid.toString(),
+					className: "tab",
+					content: await invoke("get_content", {tabId: tabid}),
+				};
 
-		setTabs((prevTabs) => [...prevTabs, newTab]);
-		setNextID(nextID + 1);
-		setActiveTab(newTab.id);
+				setTabs((prevTabs) => [...prevTabs, newTab]);
+				setActiveTab(newTab.id);
+				setNextID(tabid);
+				console.log("tab created with path: " + path);
+			}
+			else {
+				console.log("error creating tab with path: " + path);
+			}
+		}
+		else {
+			let tabid = await spawnTab(); // create new tab in back end
+			if (tabid) {
+				const newTab: TabProps = {
+					label: `Tab ${tabid.toString()}`,
+					id: tabid.toString(),
+					className: "tab",
+					content: "",
+				};
+				setTabs((prevTabs) => [...prevTabs, newTab]);
+				setActiveTab(newTab.id);
+				setNextID(tabid);
+				console.log("tab created");
+			}
+			else {
+				console.log("error creating tab");
+			}
+		}
 	};
 
 	useEffect(() => {
@@ -119,12 +150,30 @@ const TabsBar: React.FC = () => {
 
 			textAreaRef.current.setValue(atab.content || "");
 
+			// textAreaRef.current.onDidChangeModelContent( async () => {
+			// 	if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+            //         console.log(
+            //             `Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
+            //         );
+            //         await invoke("update_tab_content", {
+            //             tabId: parseInt(activeTab),
+            //             content: textAreaRef.current.getValue(),
+            //         });
+            //         atab.content = textAreaRef.current.getValue();
+			// 		setContentChangeDisposable
+            //     }
+            // })
+
 			setContentChangeDisposable(
 				textAreaRef.current.onDidChangeModelContent(() => {
 					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
 						console.log(
 							`Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
 						);
+						invoke("update_tab_content", {
+                            tabId: parseInt(activeTab),
+                            content: textAreaRef.current.getValue(),
+                        });
 						atab.content = textAreaRef.current.getValue();
 					}
 				})
@@ -137,7 +186,8 @@ const TabsBar: React.FC = () => {
 	}, [tabs, activeTab]);
 	// const addTabFile = async (path: string) => {
 	// 	// creates tab in backend
-	// 	const nextID = await setNextIDFile(path);
+	// 	// const nextID = await setNextIDFile(path);
+	// 	spawnTabFile(path);
 
 	// 	// creates tab in frontend
 	// 	if (nextID != null) {
@@ -157,7 +207,8 @@ const TabsBar: React.FC = () => {
 	// 	}
 	// };
 
-	const deleteTab = (id: string) => {
+	const deleteTab = async (id: string) => {
+		await invoke("remove_tab", {tabId: parseInt(id)}); // remove tab from back end
 		if (tabs.length == 1) {
 			appWindow.close();
 		}
@@ -238,7 +289,7 @@ const TabsBar: React.FC = () => {
 					isActive={tab.id == activeTab}
 				/>
 			))}
-			<div className="tab add-tab" onClick={addTab}>
+			<div className="tab add-tab" onClick={() => addTab()}>
 				+
 			</div>
 		</div>
