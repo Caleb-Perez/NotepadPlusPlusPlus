@@ -99,12 +99,32 @@ const TabsBar: React.FC = () => {
 			className: "tab",
 			content: "",
 		};
-		setNextID(nextID + 1);
 		setTabs((prevTabs) => [...prevTabs, newTab]);
 		changeTab(newTab.id);
+		console.log(tabs.length);
+		setNextID(nextID + 1);
 
-		if (textAreaRef && "current" in textAreaRef && textAreaRef.current)
+		contentChangeDisposable?.dispose();
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+			textAreaRef.current.setValue("");
+			setContentChangeDisposable(
+				textAreaRef.current.onDidChangeModelContent(() => {
+					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+						const atab = tabs.find((tab) => tab.id === newTab.id);
+						if (atab) {
+							console.log(
+								`Bye content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
+							);
+							atab.content = textAreaRef.current.getValue();
+						}
+					}
+				})
+			);
+		}
+
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
 			textAreaRef?.current.focus();
+		}
 	};
 
 	// const addTabFile = async (path: string) => {
