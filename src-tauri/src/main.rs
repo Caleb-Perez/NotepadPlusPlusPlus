@@ -4,7 +4,6 @@
 use std::fs;
 use std::fs::OpenOptions;
 use regex::Regex;
-use lazy_static::lazy_static;
 use std::sync::Mutex;
 use tauri::State;
 use tauri::Manager;
@@ -16,13 +15,14 @@ use thiserror::Error;
 use std::path::Path;
 
 // custom error type that implements serde::Serialize
+// Note: Error implementation lifted straight from https://tauri.app/v1/guides/features/command/
 #[derive(Debug, thiserror::Error)]
 enum Error {
   #[error(transparent)]
   Io(#[from] std::io::Error)
 }
 
-// we must manually implement serde::Serialize
+// we must manually implement serde::Serialize. See above for where this code came from
 impl serde::Serialize for Error {
   fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
   where
@@ -38,10 +38,10 @@ impl serde::Serialize for Error {
  * title is probably gonna be filename, but it can be whatever ig
  * content is the actual content itself
  * is_dirty indicates if there are unsaved changes
+ * file contains filepath that tab content came from (if it came from a file)
  */
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct Tab {
-    // TODO: add filepath and OFD
     id: usize,
     title: String,
     content: String,
@@ -192,6 +192,7 @@ impl TabManager {
 }
 
 // the following are all just wrappers for the tab manager functions. These are what the front end calls
+// implemented as separate commands so that the Tauri state manager can come in
 #[tauri::command]
 fn add_tab(state: State<'_, Mutex<TabManager>>, title: String, content: String) -> usize {
     let mut manager = state.lock().unwrap();
@@ -252,76 +253,11 @@ fn get_filepath(state: State<'_, Mutex<TabManager>>, tab_id: usize) -> String {
     return manager.get_filepath(tab_id)
 }
 
-// greet command for random testing
-/* Notes:
- * Always handy to have this around to play with how front and back interact without risking breaking anything
- * Will obviously be removed eventually, but for now you never know when you need a throwaway command
- */
-#[tauri::command]
-fn greet(msg: &str) -> String {
-    format!("Updated: {}", msg)
-}
-
-#[tauri::command]
-fn foo(message: String) -> String {
-    let mut global_string = GLOBAL_STRING.lock().unwrap();
-    *global_string = message.clone();
-    format!("Received: {}", global_string)
-}
-
-// find and replace
-/* Notes:
- * This command requires the "regex" feature in Cargo.toml
- * You need to escape special characters in s2 using regex::escape
- * The regex pattern should be created using regex::new
- * This command will replace all occurrences of s2 with s3 in s1. It returns a new String with the replacements.
- * Appears to work out of the box, but frontend should remember to fetch the result of this for it to show in the textarea
-*/
-#[tauri::command]
-fn find_and_replace(s1: &str, s2: &str, s3: &str) -> String{
-    let re = Regex::new(&regex::escape(s2)).unwrap();
-
-    re.replace_all(s1, s3).to_string()
-}
-
-// save str to file 
-/* Notes:
- * "file.txt" is hardcoded for testing. Obviously the user will get to pick
- * This command will overwrite the existing file if it exists. Need to prompt user instead of just doing it: WIP!
-*/
-#[tauri::command]
-fn save_str(content: &str) -> Result<(), String> {
-    use std::env;
-    use std::path::PathBuf;
-
-    let downloads_dir = env::var_os("HOME").map_or_else(
-        || env::var_os("USERPROFILE").map(PathBuf::from),
-        |home| {
-            let mut path = PathBuf::from(home);
-            path.push("Downloads");
-            Some(path)
-        },
-    ).ok_or_else(|| "Error getting Downloads directory".to_string())?;
-
-    let file_path = downloads_dir.join("file.txt"); // Replace "file.txt" with your desired file name
-
-    match fs::write(file_path, content) {
-        Ok(_) => Ok(()),
-        Err(err) => Err(format!("Error saving file: {}", err)),
-    }
-}
-
-lazy_static! {
-    static ref GLOBAL_STRING: Mutex<String> = Mutex::new(String::new());
-}
-
-
 
 fn main() {
     tauri::Builder::default()
         .manage(Mutex::new(TabManager::new()))
         .invoke_handler(tauri::generate_handler![
-            greet, find_and_replace, save_str, foo,
             add_tab, remove_tab, switch_tab, update_tab_content,
             save_to_file, add_tab_file, get_content, check_valid_path, get_filepath
             ])
