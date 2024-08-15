@@ -106,6 +106,11 @@ const StartUpSign: React.FC = () => {
 						onClick={() => setGoToEditPage(true)}>
 						Java File
 					</button>
+					<button
+						className="link-button-pop-up"
+						onClick={() => setGoToEditPage(true)}>
+						Javascript File
+					</button>
 				</div>
 			</main>
 		</div>
