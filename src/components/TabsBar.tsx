@@ -70,14 +70,21 @@ const TabsBar: React.FC = () => {
 		}
 		if ((event.ctrlKey || event.metaKey) && event.key === "s") {
 			event.preventDefault();
-			const filepath = await save({
-				filters: [
-					{
-						name: "Text Files",
-						extensions: ["txt", "md"],
-					},
-				],
-			});
+			const saveOk = await invoke("check_valid_path", {tabId: parseInt(activeTab)});
+			let filepath;
+			if (saveOk === true) {
+				filepath = await invoke("get_filepath", {tabId: parseInt(activeTab)});
+			}
+			else {
+				let filepath = await save({
+					filters: [
+						{
+							name: "Text Files",
+							extensions: ["txt", "md"],
+						},
+					],
+				});
+			}
 			if (filepath != null) {
 				await invoke("save_to_file", {
 					tabId: parseInt(activeTab),
