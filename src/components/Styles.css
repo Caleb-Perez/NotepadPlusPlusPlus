@@ -70,6 +70,7 @@
 	display: inline-block;
 }
 
+
 .add-tab {
 	margin: 0;
 	padding: 5px;
@@ -158,9 +159,8 @@ main {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
-	
 	text-align: center;
-	font-size: 2vw;
+	font-size: 3vw;
 	font-weight: 450;
 	margin-top: 5%;
 	padding: 2%;
@@ -206,6 +206,12 @@ button:hover {
 	visibility: visible;
 	top: 50%;
 	transform: translate(-50%, -50%) scale(1);
+	top:50%;
+	left:50%;
+	padding: 60px;
+	box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+	border-radius: 20px;
+
 }
 
 .link-button-pop-up {
@@ -228,19 +234,15 @@ button:hover {
 
 .close-btn {
 	position: absolute;
-	top: -5px;
+	top: 10px;
 	right: 10px;
 	width: 20px;
 	height: 20px;
-	background: transparent;
+	background: #eee;
+	color:#111;
+	border: none;
+	outline: none;
 	border-radius: 20%;
-	cursor: pointer;
-}
-
-.blur {
-	filter: blur(30px);
-	background: rgba(0, 0, 0, 0.8);
-	transition: filter 0ms ease-in-out 0ms;
 }
 
 .bottom-bar {
