@@ -135,6 +135,8 @@
 	height: auto;
 	width: auto;
 	padding: 20px;
+	position: relative;
+	overflow: hidden;
 }
 
 main {
@@ -142,6 +144,8 @@ main {
 	flex-direction: column;
 	justify-content: flex-start;
 	margin-left: 50px;
+	position: relative;
+	z-index: 1;
 }
 
 .buttons {
@@ -160,7 +164,7 @@ main {
 	display: flex;
 	align-items: center;
 	text-align: center;
-	font-size: 3vw;
+	font-size: 2.5vw;
 	font-weight: 450;
 	margin-top: 5%;
 	padding: 2%;
@@ -170,6 +174,24 @@ main {
 	max-width: 80%;
 	
 }
+/*.buttons button {
+	background-color: #a7a7a7;
+	border: none;
+	border-radius: 60px;
+	color: #000000;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	font-size: 30px;
+	font-weight: 600;
+	margin-top: 50px;
+	padding: 30px;
+	height: 115px;
+	width: 415px;
+}
+*/
+
 
 button .icon {
 	margin-right: 20px;
@@ -184,11 +206,23 @@ button:hover {
 	margin-right: 20px;
 }
 
+@keyframes popup-animation {
+	from { 
+		opacity: 1;
+		transform: scale(0.8);
+
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
 .pop-up {
 	width: 500px;
 	background: #fff;
-	border-radius: 7px;
-	position: absolute;
+	border-radius: 20px;
+	border: 1px solid #ccc;
+	position: fixed;
 	top: 0%;
 	left: 50%;
 	transform: translate(-50%, -50%) scale(0.1);
@@ -200,18 +234,24 @@ button:hover {
 	justify-content: center;
 	flex-direction: column;
 	box-shadow: 0px 2px 5px 5px rgba(0, 0, 0, 0.1);
+	background: linear-gradient(to bottom right, #ffffff, #e0e0e0);
 }
 
+
+
+
 .open-popup {
+	z-index: 2;
+	position: fixed;
 	visibility: visible;
 	top: 50%;
 	transform: translate(-50%, -50%) scale(1);
 	top:50%;
 	left:50%;
-	padding: 60px;
+	padding: 55px;
 	box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-	border-radius: 20px;
-
+	border-radius: 15px;
+	animation: popup-animation 0.2s ease-out;
 }
 
 .link-button-pop-up {
@@ -300,3 +340,15 @@ textarea {
 	color: #ffffff;
 	font-family: Arial, Helvetica, sans-serif;
 }
+
+/*
+.container.active-open-popup{
+	overflow: hidden;
+}
+
+.container.container.active-open-popup .main {
+	filter: blur(5px);
+	background: rgba(0, 0, 0, 0.08);
+	transition: filter 0ms ease-in-out 0ms;
+}
+*/
