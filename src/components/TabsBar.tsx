@@ -63,7 +63,7 @@ const TabsBar: React.FC = () => {
 				filters: [
 					{
 						name: "Text files",
-						extensions: ["txt"],
+						extensions: ["cpp", "hpp", "py", "js", "txt"],
 					},
 				],
 			});
@@ -85,7 +85,7 @@ const TabsBar: React.FC = () => {
 					filters: [
 						{
 							name: "Text Files",
-							extensions: ["txt", "md"],
+							extensions: ["cpp", "hpp", "py", "js", "txt"],
 						},
 					],
 				});

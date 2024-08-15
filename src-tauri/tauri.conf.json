@@ -40,7 +40,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "NPPPV2",
+      "identifier": "NPPPV3",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
