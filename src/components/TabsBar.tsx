@@ -6,6 +6,8 @@ import { text } from "stream/consumers";
 import { invoke } from "@tauri-apps/api";
 import { open } from "@tauri-apps/api/dialog";
 import { save } from "@tauri-apps/api/dialog";
+import { Editor, loader, OnMount } from "@monaco-editor/react";
+import * as monaco from "monaco-editor";
 import logo from "../assets/logo.png";
 
 interface TabProps {
@@ -103,7 +105,8 @@ const TabsBar: React.FC = () => {
 			setActiveTab(newTab.id);
 			// setNextID(nextID + 1);
 			setTabs((prevTabs) => [...prevTabs, newTab]);
-			textAreaRef?.focus();
+			if (textAreaRef && "current" in textAreaRef && textAreaRef.current)
+				textAreaRef?.current.focus();
 		}
 	};
 
@@ -123,7 +126,9 @@ const TabsBar: React.FC = () => {
 			setActiveTab(newTab.id);
 			// setNextID(nextID + 1);
 			setTabs((prevTabs) => [...prevTabs, newTab]);
-			textAreaRef?.focus();
+			if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+				textAreaRef?.current.focus();
+			}
 		}
 	};
 
@@ -132,6 +137,7 @@ const TabsBar: React.FC = () => {
 	};
 
 	useEffect(() => {
+		let contentChangeDisposable: monaco.IDisposable | null = null;
 		if (tabs.length === 0) {
 			setActiveTab("0");
 		} else if (activeTab && !tabs.find((tab) => tab.id === activeTab)) {
@@ -139,23 +145,46 @@ const TabsBar: React.FC = () => {
 		}
 
 		window.addEventListener("keydown", handleKeyDown);
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+			contentChangeDisposable = textAreaRef.current.onDidChangeModelContent(
+				() => {
+					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+						tabs[parseInt(activeTab)].content = textAreaRef.current.getValue();
+					}
+				}
+			);
+		}
 
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
+			contentChangeDisposable?.dispose();
+			if (contentChangeDisposable) {
+				console.log("DISPOSED");
+				contentChangeDisposable.dispose();
+			}
 		};
 	}, [tabs, activeTab]);
 
 	const changeTab = (id: string) => {
-		console.log(`Here is the value: "${textAreaRef?.getValue()}"`);
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+			console.log(
+				`Tab ${parseInt(activeTab)} is currently "${
+					tabs[parseInt(activeTab)].content
+				}"`
+			);
+		}
 		if (activeTab != id) {
-			if (textAreaRef?.getValue()) {
-				tabs[parseInt(activeTab)].content = textAreaRef?.getValue();
+			if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+				textAreaRef.current.setValue(tabs[parseInt(activeTab)].content);
+				console.log(
+					`content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
+				);
 			}
 
 			setActiveTab(id);
 		}
-
-		textAreaRef?.focus();
+		if (textAreaRef && "current" in textAreaRef && textAreaRef.current)
+			textAreaRef?.current.focus();
 	};
 
 	return (

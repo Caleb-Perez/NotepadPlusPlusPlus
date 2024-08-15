@@ -29,15 +29,15 @@ const Tab: React.FC<TabProps> = ({
 
 	useEffect(() => {
 		const handleChange = () => {
-			if (textAreaRef) {
+			if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
 				// invoke("update_tab_content", {
 				// 	tabId: parseInt(id),
 				// 	content: textAreaRef.current.value,
 				// }).then(() => {
 				// 	console.log("update_tab_content called successfully on tab " + id);
 				// });
-				console.log(textAreaRef.getValue());
-				setTabText(textAreaRef.getValue());
+				// console.log("HEEEEEEELP"); //textAreaRef.current.getValue());
+				// setTabText(textAreaRef.current.getValue());
 			}
 		};
 		handleChange();
@@ -56,9 +56,16 @@ const Tab: React.FC<TabProps> = ({
 			}
 		};
 
-		if (isActive && textAreaRef) {
-			// textAreaRef.current.addEventListener("input", handleChange);
-			textAreaRef.setValue(tabText);
+		if (
+			isActive &&
+			textAreaRef &&
+			"current" in textAreaRef &&
+			textAreaRef.current
+		) {
+			console.log(
+				`Tab ${id} is changing to ${textAreaRef.current.setValue(tabText)}`
+			);
+			textAreaRef.current.setValue(tabText);
 		}
 
 		if (!initialized.current) {
@@ -79,7 +86,7 @@ const Tab: React.FC<TabProps> = ({
 			className={`${className} ${isActive ? "active" : ""}`}
 			onClick={() => {
 				if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-					textAreaRef.setValue(tabText);
+					textAreaRef.current.setValue(tabText);
 				}
 				onClick();
 			}}
