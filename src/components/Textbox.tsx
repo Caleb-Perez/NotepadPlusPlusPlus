@@ -61,6 +61,9 @@ export const TextBox: React.FC = () => {
 	if (!IsThemeLoaded) {
 		return null;
 	}
+	const editorOptions = {
+		minimap: { enabled: false }, // Disable the minimap
+	};
 
 	const handleEditorMount: OnMount = (editor, monaco) => {
 		if (editor) {
@@ -89,6 +92,7 @@ export const TextBox: React.FC = () => {
 			defaultLanguage={"javascript"}
 			defaultValue=""
 			onMount={handleEditorMount}
+			options={editorOptions}
 		/>
 	);
 };
