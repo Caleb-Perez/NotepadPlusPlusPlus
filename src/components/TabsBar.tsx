@@ -6,6 +6,7 @@ import { text } from "stream/consumers";
 import { invoke } from "@tauri-apps/api";
 import { open } from '@tauri-apps/api/dialog';
 import { save } from '@tauri-apps/api/dialog';
+import logo from '../assets/logo.png';
 
 interface TabProps {
 	id: string;
@@ -146,7 +147,7 @@ const TabsBar: React.FC = () => {
 
 	return (
 		<div className="editor-tabs">
-			<span className="logo">👽 </span>
+			<img src={logo} alt="Logo" className="logo" />
 			{tabs.map((tab) => (
 				<Tab
 					key={tab.id}
