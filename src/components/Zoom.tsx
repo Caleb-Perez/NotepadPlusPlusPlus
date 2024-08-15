@@ -1,28 +1,40 @@
-import React from "react";
-// default zoom level
-let zoomLevel: number = 1;
+import { appWindow } from '@tauri-apps/api/window';
 
-// 
-const ZoomStyle = () => {
-    document.body.style.transform = `scale(${zoomLevel})`;
-    document.body.style.transformOrigin = "0 0";
-    document.body.style.width = `${100 / zoomLevel}%`; // adjust the width 
-    document.body.style.height = `${100 / zoomLevel}%`; // Adjust the height 
+// Default zoom level
+let zoomLevel = 1;
+
+const applyZoom = () => {
+    const body = document.body;
+
+    // Apply scale with top-left origin
+    body.style.transform = `scale(${zoomLevel})`;
+    body.style.transformOrigin = "top left";
+
+    // Adjust body size to match zoom level
+    body.style.width = `${100 / zoomLevel}vw`;
+    body.style.height = `${100 / zoomLevel}vh`;
+
+    // Hide scrollbars
+    body.style.overflow = "hidden";
 };
 
-// zoom in function
+// Zoom in function
 export const zoomIn = () => {
     zoomLevel = Math.min(zoomLevel * 1.2, 3); // Limit zoom-in to 3x
-    ZoomStyle();
+    applyZoom();
 };
 
-// zoom out function
+// Zoom out function
 export const zoomOut = () => {
-    zoomLevel = Math.max(zoomLevel * 0.8, 0.5); // Limit zoom-out to 0.5x
-    ZoomStyle();
+    zoomLevel = Math.max(zoomLevel * 0.8, 1); // Limit zoom-out to 1
+    applyZoom();
 };
 
-//fullscreen
-export const fullScreen = () => {
-	document.body.requestFullscreen();
+export const fullScreen = async () => {
+    const isFullscreen = await appWindow.isFullscreen();
+    if (isFullscreen) {
+        await appWindow.setFullscreen(false); 
+    } else {
+        await appWindow.setFullscreen(true); 
+    }
 };

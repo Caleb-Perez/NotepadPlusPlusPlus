@@ -156,6 +156,7 @@ main {
 }
 
 .buttons button {
+	background: linear-gradient(145deg, #a7a7a7, #cccccc);
 	background-color: #a7a7a7;
 	border: none;
 	border-radius: 60px;
@@ -202,6 +203,8 @@ button .icon {
 
 button:hover {
 	background-color: #cccccc;
+	transform: translateY(-5px);
+	box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.4);
 }
 
 .plus {
