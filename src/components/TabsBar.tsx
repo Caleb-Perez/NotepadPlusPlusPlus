@@ -147,29 +147,20 @@ const TabsBar: React.FC = () => {
 		if (!activeTab) return;
 
 		const atab = tabs.find((tab) => tab.id === activeTab);
+		console.log("textarearef: " + textAreaRef? "true" : "false");
+		// console.log("current: " + "current" in textAreaRef? "true" : "false");
+		console.log("TAR current: " + textAreaRef.current? "true" : "false");
+		console.log("TAR tab: " + atab? "true" : "false");
 		if (
 			textAreaRef &&
-			"current" in textAreaRef &&
 			textAreaRef.current &&
 			atab
 		) {
+			console.log("content set");
+
 			contentChangeDisposable?.dispose();
 
 			textAreaRef.current.setValue(atab.content || "");
-
-			// textAreaRef.current.onDidChangeModelContent( async () => {
-			// 	if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-			//         console.log(
-			//             `Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
-			//         );
-			//         await invoke("update_tab_content", {
-			//             tabId: parseInt(activeTab),
-			//             content: textAreaRef.current.getValue(),
-			//         });
-			//         atab.content = textAreaRef.current.getValue();
-			// 		setContentChangeDisposable
-			//     }
-			// })
 
 			setContentChangeDisposable(
 				textAreaRef.current.onDidChangeModelContent(() => {
@@ -185,6 +176,11 @@ const TabsBar: React.FC = () => {
 					}
 				})
 			);
+		}
+		console.log("re-rendered " + activeTab);
+		if (tabs.length > 0) {
+			console.log(tabs[0].content);
+			
 		}
 
 		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
@@ -266,9 +262,11 @@ const TabsBar: React.FC = () => {
 	};
 
 	useEffect(() => {
+		console.log("keydown useeffect running");
 		const atab = tabs.find((tab) => tab.id === activeTab);
 		if (tabs.length === 0) {
-			addTab();
+			// console.log("tab created from first handler");
+			// addTab();
 		} else if (activeTab && !tabs.find((tab) => tab.id === activeTab)) {
 			setActiveTab(tabs[tabs.length - 1].id);
 		}
@@ -283,9 +281,44 @@ const TabsBar: React.FC = () => {
 	}, [tabs, activeTab]);
 
 	useEffect(() => {
-		if (tabs.length == 0) {
-			addTab();
+		async function catchTab() {
+			console.log("catching...");
+			const pretab = await invoke("catch_new_tab");
+			console.log("pretab: " + pretab);
+			if (typeof pretab === "string" && pretab == "0") {
+				const path = await invoke("get_filepath", {tabId: parseInt(pretab)});
+				if (typeof path === "string") {
+                    addTab(path);
+                } else {
+                    console.log("error getting path for tab: " + pretab);
+                }
+				// console.log("tab caught!");
+                // const newTab: TabProps = {
+                //     label: await invoke("get_filepath", {tabId: parseInt(pretab)}),
+                //     id: pretab.toString(),
+                //     className: "tab",
+                //     content: await invoke("get_content", {tabId: parseInt(pretab)}),
+                // };
+				// setTabs((prevTabs) => [...prevTabs, newTab]);
+				// setActiveTab(newTab.id);
+				// setNextID(parseInt(pretab));
+				// console.log("tab created with path: " + newTab.label);
+				// console.log(newTab.content);
+				return true;
+			}
+			else return false;
 		}
+		catchTab().then((val) => {
+			console.log("catchTab finished: " + val);
+			if (tabs.length == 0 && val == false)
+			{
+				console.log("tab created from second handler");
+				addTab();
+			}
+		})
+		// if (tabs.length == 0) {
+		// 	addTab();
+		// }
 	}, []);
 
 	return (

@@ -6,6 +6,8 @@ import { Navigate } from "react-router-dom";
 import { readBuilderProgram } from "typescript";
 import PopUp from "./PopUp";
 import { ReactComponent as FolderLogo } from "../assets/folder.svg";
+import { invoke } from "@tauri-apps/api";
+import { open } from "@tauri-apps/api/dialog";
 
 type StartUpSignProps = {
 	openPopup: () => void;
@@ -19,10 +21,26 @@ const StartUpSign: React.FC = () => {
 		return <Navigate to="/edit" />;
 	}
 
-	const openFileBrowser = () => {
-		if (inputFile.current) {
-			inputFile.current.click();
+	const openFileBrowser = async () => {
+
+		// open file explorer
+		const selected = await open({
+			multiple: false,
+			filters: [
+				{
+					name: "Text files",
+					extensions: ["txt"],
+				},
+			],
+		});
+		// if one file
+		if (typeof selected === "string") {
+			await invoke("add_tab_file", { title: selected, filePath: selected});
 		}
+		setGoToEditPage(true);
+		// if (inputFile.current) {
+		// 	inputFile.current.click();
+		// }
 	};
 
 	const handleFile: React.ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -49,17 +67,17 @@ const StartUpSign: React.FC = () => {
 					<h1>&emsp;Here</h1>
 				</div>
 				<div className="buttons">
-					<button id="open-file" onClick={openFileBrowser}>
+					<button id="open-file" onClick={() => openFileBrowser()}>
 						<FolderLogo /> <span className="open">Open file</span>
 					</button>
 					{/*if "style = {{display: 'none'}}" is removed, the file browser wont open but you can drag a file and it will work. Still in progress*/}
-					<input
+					{/* <input
 						ref={inputFile}
 						accept=".txt,.cpp,.py,.js"
 						type="file"
 						onChange={handleFile}
 						style={{ display: "none" }}
-					/>
+					/> */}
 					<button id="create-new" onClick={() => setPopUp(true)}>
 						<span className="icon">
 							<span className="plus">+</span>

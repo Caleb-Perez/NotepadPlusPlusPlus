@@ -188,6 +188,15 @@ impl TabManager {
             String::new()
         }
     }
+
+    fn catch_new_tab(&self) -> String {
+        if self.tabs.len() == 1 {
+            return self.tabs[0].id.to_string();
+        }
+        else {
+            return self.tabs.len().to_string();
+        }
+    }
     
 }
 
@@ -250,6 +259,12 @@ fn check_valid_path(state: State<'_, Mutex<TabManager>>, tab_id: usize) -> bool 
 fn get_filepath(state: State<'_, Mutex<TabManager>>, tab_id: usize) -> String {
     let mut manager = state.lock().unwrap();
     return manager.get_filepath(tab_id)
+}
+
+#[tauri::command]
+fn catch_new_tab(state: State<'_, Mutex<TabManager>>) -> String {
+    let manager = state.lock().unwrap();
+    return manager.catch_new_tab();
 }
 
 // greet command for random testing
@@ -323,7 +338,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             greet, find_and_replace, save_str, foo,
             add_tab, remove_tab, switch_tab, update_tab_content,
-            save_to_file, add_tab_file, get_content, check_valid_path, get_filepath
+            save_to_file, add_tab_file, get_content, check_valid_path, get_filepath, 
+            catch_new_tab
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
