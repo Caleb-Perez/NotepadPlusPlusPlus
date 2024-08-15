@@ -86,7 +86,7 @@ export const TextBox: React.FC = () => {
 		<Editor
 			theme="myTheme"
 			height="90vh"
-			defaultLanguage={"javascript"}
+			defaultLanguage={"plaintext"}
 			defaultValue=""
 			onMount={handleEditorMount}
 		/>
