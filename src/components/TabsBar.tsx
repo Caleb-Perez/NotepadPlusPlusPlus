@@ -6,6 +6,7 @@ import { text } from "stream/consumers";
 import { invoke } from "@tauri-apps/api";
 import { open } from "@tauri-apps/api/dialog";
 import { save } from "@tauri-apps/api/dialog";
+import { message } from '@tauri-apps/api/dialog';
 import { Editor, loader, OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { appWindow } from "@tauri-apps/api/window";
@@ -76,7 +77,7 @@ const TabsBar: React.FC = () => {
 				filepath = await invoke("get_filepath", {tabId: parseInt(activeTab)});
 			}
 			else {
-				let filepath = await save({
+				filepath = await save({
 					filters: [
 						{
 							name: "Text Files",
@@ -91,6 +92,7 @@ const TabsBar: React.FC = () => {
 					filePath: filepath,
 				});
 				console.log("ctrl+S pressed, tab " + activeTab + " saved to: " + filepath);
+				await message("file saved to: " + filepath);
 			}
 			else {
 				console.log("ctrl+S pressed, no file selected");
