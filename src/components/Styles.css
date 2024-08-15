@@ -99,6 +99,7 @@
 
 .text-container{
 	background-color: #000000;
+	overflow-y: auto;
 }
 
 .window-controls button {
