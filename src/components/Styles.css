@@ -293,3 +293,7 @@ textarea {
 	color: #ffffff;
 	font-family: Arial, Helvetica, sans-serif;
 }
+
+.option.active {
+	background-color: black;
+}
