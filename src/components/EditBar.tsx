@@ -8,6 +8,12 @@ const EditBar: React.FC = () => {
 	const [col, setCol] = useState<number | undefined>(1);
 	const [contentChangeDisposable, setContentChangeDisposable] =
 		useState<monaco.IDisposable | null>(null);
+	const [dummy, setDummy] = useState(0);
+
+	const changeit = () => {
+		setDummy(1);
+		console.log("hi!");
+	};
 
 	useEffect(() => {
 		if (editorRef && "current" in editorRef && editorRef.current) {
@@ -15,7 +21,7 @@ const EditBar: React.FC = () => {
 				editorRef.current.onDidChangeCursorPosition(() => {
 					if (editorRef && "current" in editorRef && editorRef.current) {
 						const position = editorRef.current.getPosition();
-						console.log("he there");
+						console.log("hey there");
 						setLine(position?.lineNumber);
 						setCol(position?.column);
 					}
@@ -27,10 +33,10 @@ const EditBar: React.FC = () => {
 		return () => {
 			if (contentChangeDisposable) contentChangeDisposable.dispose();
 		};
-	}, [editorRef.current?.getValue()]);
+	}, [dummy]);
 
 	return (
-		<div className="edit-bar">
+		<div className="edit-bar" onClick={changeit}>
 			<span>Line: {line} </span>
 			<span>Col: {col}</span>
 			<span>UTF-8</span>
