@@ -22,69 +22,74 @@ const Tab: React.FC<TabProps> = ({
 	onDelete,
 	isActive,
 }) => {
-	const [tabText, setTabText] = useState("");
-	const { textAreaRef } = useTextBox();
+	// const [tabText, setTabText] = useState("");
+	// const textAreaRef = useTextBox();
 
 	const initialized = useRef(false);
 
-	useEffect(() => {
-
-		const handleChange = () => {
-			if (textAreaRef.current) {
-				invoke("update_tab_content", {
-					tabId: parseInt(id),
-					content: textAreaRef.current.value,
-				}).then(() => {
-					console.log("update_tab_content called successfully on tab " + id);
-				});
-				setTabText(textAreaRef.current.value);
-			}
-		};
-
-		const fetchString = async () => {
-			try {
-				if (true) {
-					const content: string = await invoke("get_content", {
-						tabId: parseInt(id)
-					});
-					if (textAreaRef.current) {
-						textAreaRef.current.value = content;
-					}
-					console.log(content);
-					setTabText(content);
-				}
-			}
-			catch (error) {
-                console.error("Error fetching content:", error);
-            }
-		};
-
-		if (isActive && textAreaRef.current) {
-			textAreaRef.current.addEventListener("input", handleChange);
-			textAreaRef.current.value = tabText;
-		}
-
-		if (!initialized.current) {
-			console.log("calling...")
-			fetchString();
-			initialized.current = true;
-		}
-
-		return () => {
-			if (textAreaRef.current) {
-				textAreaRef.current.removeEventListener("input", handleChange);
-			}
-		};
-	}, [isActive, textAreaRef, id]);
-
+	useEffect(
+		() => {
+			// const handleChange = () => {
+			// 	if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+			// 		// invoke("update_tab_content", {
+			// 		// 	tabId: parseInt(id),
+			// 		// 	content: textAreaRef.current.value,
+			// 		// }).then(() => {
+			// 		// 	console.log("update_tab_content called successfully on tab " + id);
+			// 		// });
+			// 		// console.log("HEEEEEEELP"); //textAreaRef.current.getValue());
+			// 		// setTabText(textAreaRef.current.getValue());
+			// 	}
+			// };
+			// handleChange();
+			// const fetchString = async () => {
+			// 	try {
+			// 		const content: string = await invoke("get_content", {
+			// 			tabId: parseInt(id),
+			// 		});
+			// 		// if (textAreaRef) {
+			// 		// 	textAreaRef.setValue(content);
+			// 		// }
+			// 		console.log(content);
+			// 		setTabText(content);
+			// 	} catch (error) {
+			// 		console.error("Error fetching content:", error);
+			// 	}
+			// };
+			// if (
+			// 	isActive &&
+			// 	textAreaRef &&
+			// 	"current" in textAreaRef &&
+			// 	textAreaRef.current
+			// ) {
+			// 	console.log(
+			// 		`Tab ${id} is changing to ${textAreaRef.current.setValue(tabText)}`
+			// 	);
+			// 	textAreaRef.current.setValue(tabText);
+			// }
+			// if (!initialized.current) {
+			// 	console.log("calling...");
+			// 	fetchString();
+			// 	initialized.current = true;
+			// }
+			// return () => {
+			// 	// if (textAreaRef.current) {
+			// 	// 	textAreaRef.current.removeEventListener("input", handleChange);
+			// 	// }
+			// };
+		},
+		[
+			/*isActive, textAreaRef, id*/
+		]
+	);
 
 	return (
 		<div
 			className={`${className} ${isActive ? "active" : ""}`}
 			onClick={() => {
-				if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-					textAreaRef.current.value = tabText;
-				}
+				// if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
+				// 	// textAreaRef.current.setValue(tabText);
+				// }
 				onClick();
 			}}
 			id={id}
