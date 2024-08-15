@@ -23,67 +23,63 @@ const Tab: React.FC<TabProps> = ({
 	isActive,
 }) => {
 	const [tabText, setTabText] = useState("");
-	const { textAreaRef } = useTextBox();
+	const textAreaRef = useTextBox();
 
 	const initialized = useRef(false);
 
 	useEffect(() => {
-
 		const handleChange = () => {
-			if (textAreaRef.current) {
-				invoke("update_tab_content", {
-					tabId: parseInt(id),
-					content: textAreaRef.current.value,
-				}).then(() => {
-					console.log("update_tab_content called successfully on tab " + id);
-				});
-				setTabText(textAreaRef.current.value);
+			if (textAreaRef) {
+				// invoke("update_tab_content", {
+				// 	tabId: parseInt(id),
+				// 	content: textAreaRef.current.value,
+				// }).then(() => {
+				// 	console.log("update_tab_content called successfully on tab " + id);
+				// });
+				console.log(textAreaRef.getValue());
+				setTabText(textAreaRef.getValue());
 			}
 		};
-
+		handleChange();
 		const fetchString = async () => {
 			try {
-				if (true) {
-					const content: string = await invoke("get_content", {
-						tabId: parseInt(id)
-					});
-					if (textAreaRef.current) {
-						textAreaRef.current.value = content;
-					}
-					console.log(content);
-					setTabText(content);
-				}
+				const content: string = await invoke("get_content", {
+					tabId: parseInt(id),
+				});
+				// if (textAreaRef) {
+				// 	textAreaRef.setValue(content);
+				// }
+				console.log(content);
+				setTabText(content);
+			} catch (error) {
+				console.error("Error fetching content:", error);
 			}
-			catch (error) {
-                console.error("Error fetching content:", error);
-            }
 		};
 
-		if (isActive && textAreaRef.current) {
-			textAreaRef.current.addEventListener("input", handleChange);
-			textAreaRef.current.value = tabText;
+		if (isActive && textAreaRef) {
+			// textAreaRef.current.addEventListener("input", handleChange);
+			textAreaRef.setValue(tabText);
 		}
 
 		if (!initialized.current) {
-			console.log("calling...")
+			console.log("calling...");
 			fetchString();
 			initialized.current = true;
 		}
 
 		return () => {
-			if (textAreaRef.current) {
-				textAreaRef.current.removeEventListener("input", handleChange);
-			}
+			// if (textAreaRef.current) {
+			// 	textAreaRef.current.removeEventListener("input", handleChange);
+			// }
 		};
 	}, [isActive, textAreaRef, id]);
-
 
 	return (
 		<div
 			className={`${className} ${isActive ? "active" : ""}`}
 			onClick={() => {
 				if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-					textAreaRef.current.value = tabText;
+					textAreaRef.setValue(tabText);
 				}
 				onClick();
 			}}

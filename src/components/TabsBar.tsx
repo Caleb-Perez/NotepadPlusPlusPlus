@@ -4,14 +4,15 @@ import Tab from "./Tab";
 import { useTextBox } from "./Textbox";
 import { text } from "stream/consumers";
 import { invoke } from "@tauri-apps/api";
-import { open } from '@tauri-apps/api/dialog';
-import { save } from '@tauri-apps/api/dialog';
-import logo from '../assets/logo.png';
+import { open } from "@tauri-apps/api/dialog";
+import { save } from "@tauri-apps/api/dialog";
+import logo from "../assets/logo.png";
 
 interface TabProps {
 	id: string;
 	label: string;
 	className: string;
+	content: string;
 }
 
 async function setNextID() {
@@ -28,21 +29,21 @@ async function setNextID() {
 
 async function setNextIDFile(path: string) {
 	try {
-        const value: number = await invoke("add_tab_file", { 
-			title: path, 
-			filePath: path 
+		const value: number = await invoke("add_tab_file", {
+			title: path,
+			filePath: path,
 		});
 		return value;
-    } catch (error) {
-        console.error("Error setting next ID file:", error);
-    }
+	} catch (error) {
+		console.error("Error setting next ID file:", error);
+	}
 }
 
 const TabsBar: React.FC = () => {
 	const [tabs, setTabs] = useState<TabProps[]>([]);
 	// const [nextID, setNextID] = useState(0);
 	const [activeTab, setActiveTab] = useState("0");
-	const { textAreaRef } = useTextBox();
+	const textAreaRef = useTextBox();
 
 	const handleKeyDown = async (event: KeyboardEvent) => {
 		if ((event.ctrlKey || event.metaKey) && event.key === "o") {
@@ -51,24 +52,28 @@ const TabsBar: React.FC = () => {
 			// get path to selected file
 			const selected = await open({
 				multiple: false,
-				filters: [{
-					name: "Text files",
-                    extensions: ["txt"]
-				}]
+				filters: [
+					{
+						name: "Text files",
+						extensions: ["txt"],
+					},
+				],
 			});
 			if (typeof selected === "string") {
-                await addTabFile(selected);
-            }
+				await addTabFile(selected);
+			}
 			console.log("ctrl+O pressed");
 		}
 
 		if ((event.ctrlKey || event.metaKey) && event.key === "s") {
 			event.preventDefault();
 			const filepath = await save({
-				filters: [{
-					name: "Text Files",
-                    extensions: ["txt", "md"]
-                }],
+				filters: [
+					{
+						name: "Text Files",
+						extensions: ["txt", "md"],
+					},
+				],
 			});
 			if (filepath != null) {
 				invoke("save_to_file", {
@@ -80,7 +85,7 @@ const TabsBar: React.FC = () => {
 		if ((event.ctrlKey || event.metaKey) && event.key === "t") {
 			event.preventDefault();
 			await addTab();
-			console.log("ctrl+T pressed")
+			console.log("ctrl+T pressed");
 		}
 	};
 
@@ -92,12 +97,13 @@ const TabsBar: React.FC = () => {
 				label: `Tab ${nextID}`,
 				id: nextID.toString(),
 				className: "tab",
+				content: "",
 			};
 
 			setActiveTab(newTab.id);
 			// setNextID(nextID + 1);
 			setTabs((prevTabs) => [...prevTabs, newTab]);
-			textAreaRef?.current?.focus();
+			textAreaRef?.focus();
 		}
 	};
 
@@ -111,12 +117,13 @@ const TabsBar: React.FC = () => {
 				label: `Tab ${nextID}`,
 				id: nextID.toString(),
 				className: "tab",
+				content: "",
 			};
 
 			setActiveTab(newTab.id);
 			// setNextID(nextID + 1);
 			setTabs((prevTabs) => [...prevTabs, newTab]);
-			textAreaRef?.current?.focus();
+			textAreaRef?.focus();
 		}
 	};
 
@@ -131,18 +138,24 @@ const TabsBar: React.FC = () => {
 			setActiveTab(tabs[tabs.length - 1].id);
 		}
 
-		window.addEventListener('keydown', handleKeyDown);
+		window.addEventListener("keydown", handleKeyDown);
 
 		return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
+			window.removeEventListener("keydown", handleKeyDown);
+		};
 	}, [tabs, activeTab]);
 
 	const changeTab = (id: string) => {
+		console.log(`Here is the value: "${textAreaRef?.getValue()}"`);
 		if (activeTab != id) {
+			if (textAreaRef?.getValue()) {
+				tabs[parseInt(activeTab)].content = textAreaRef?.getValue();
+			}
+
 			setActiveTab(id);
 		}
-		textAreaRef?.current?.focus();
+
+		textAreaRef?.focus();
 	};
 
 	return (
