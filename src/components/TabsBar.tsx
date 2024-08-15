@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Tab from "./Tab";
 // import { TabProps } from "./Tab";
 import { useTextBox } from "./Textbox";
@@ -10,6 +10,7 @@ import { message } from "@tauri-apps/api/dialog";
 import { Editor, loader, OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { appWindow } from "@tauri-apps/api/window";
+import { Language, LanguageContext } from "../menus/LanguageMenu";
 import logo from "../assets/logo.png";
 
 interface TabProps {
@@ -17,6 +18,7 @@ interface TabProps {
 	label: string;
 	className: string;
 	content: string;
+	lang: Language;
 }
 
 async function spawnTab() {
@@ -50,6 +52,7 @@ const TabsBar: React.FC = () => {
 	const textAreaRef = useTextBox();
 	const [contentChangeDisposable, setContentChangeDisposable] =
 		useState<monaco.IDisposable | null>(null);
+	const { language, setLanguage } = useContext(LanguageContext);
 
 	const handleKeyDown = async (event: KeyboardEvent) => {
 		if ((event.ctrlKey || event.metaKey) && event.key === "o") {
@@ -116,8 +119,17 @@ const TabsBar: React.FC = () => {
 					id: tabid.toString(),
 					className: "tab",
 					content: await invoke("get_content", { tabId: tabid }),
+					lang: Language.None,
 				};
-
+				if (newTab.label.includes(".py")) {
+					newTab.lang = Language.Python;
+				} else if (newTab.label.includes(".cpp")) {
+					newTab.lang = Language.CPlusPlus;
+				} else if (newTab.label.includes(".js")) {
+					newTab.lang = Language.JavaScript;
+				} else if (newTab.label.includes(".java")) {
+					newTab.lang = Language.Java;
+				}
 				setTabs((prevTabs) => [...prevTabs, newTab]);
 				setActiveTab(newTab.id);
 				setNextID(tabid);
@@ -133,6 +145,7 @@ const TabsBar: React.FC = () => {
 					id: tabid.toString(),
 					className: "tab",
 					content: "",
+					lang: Language.None,
 				};
 				setTabs((prevTabs) => [...prevTabs, newTab]);
 				setActiveTab(newTab.id);
@@ -158,20 +171,6 @@ const TabsBar: React.FC = () => {
 
 			textAreaRef.current.setValue(atab.content || "");
 
-			// textAreaRef.current.onDidChangeModelContent( async () => {
-			// 	if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-			//         console.log(
-			//             `Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
-			//         );
-			//         await invoke("update_tab_content", {
-			//             tabId: parseInt(activeTab),
-			//             content: textAreaRef.current.getValue(),
-			//         });
-			//         atab.content = textAreaRef.current.getValue();
-			// 		setContentChangeDisposable
-			//     }
-			// })
-
 			setContentChangeDisposable(
 				textAreaRef.current.onDidChangeModelContent(() => {
 					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
@@ -192,28 +191,6 @@ const TabsBar: React.FC = () => {
 			textAreaRef?.current.focus();
 		}
 	}, [tabs, activeTab]);
-	// const addTabFile = async (path: string) => {
-	// 	// creates tab in backend
-	// 	// const nextID = await setNextIDFile(path);
-	// 	spawnTabFile(path);
-
-	// 	// creates tab in frontend
-	// 	if (nextID != null) {
-	// 		const newTab: TabProps = {
-	// 			label: `Tab ${nextID}`,
-	// 			id: nextID.toString(),
-	// 			className: "tab",
-	// 			content: "",
-	// 		};
-
-	// 		setActiveTab(newTab.id);
-	// 		// setNextID(nextID + 1);
-	// 		setTabs((prevTabs) => [...prevTabs, newTab]);
-	// 		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-	// 			textAreaRef?.current.focus();
-	// 		}
-	// 	}
-	// };
 
 	const deleteTab = async (id: string) => {
 		await invoke("remove_tab", { tabId: parseInt(id) }); // remove tab from back end
@@ -244,6 +221,10 @@ const TabsBar: React.FC = () => {
 					}
 				})
 			);
+			const atab = tabs.find((tab) => tab.id === id);
+			if (atab) {
+				setLanguage(atab.lang);
+			}
 		}
 
 		setActiveTab(id);
@@ -289,6 +270,13 @@ const TabsBar: React.FC = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		console.log(`Tab ${activeTab} lang changed to ${language}`);
+		const atab = tabs.find((tab) => tab.id === activeTab);
+		if (atab) {
+			atab.lang = language;
+		}
+	}, [LanguageContext]);
 	return (
 		<div className="editor-tabs">
 			<img src={logo} alt="Logo" className="logo" />

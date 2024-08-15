@@ -357,3 +357,7 @@ textarea {
 	transition: filter 0ms ease-in-out 0ms;
 }
 */
+
+.option.active {
+	background-color: black;
+}
