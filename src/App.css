@@ -103,17 +103,6 @@ body {
 	height: 100%;
 }
 
-.line-numbers {
-	background-color: #1a1e1f;
-	color: #9a8f8f;
-	text-align: center;
-	padding: 10px;
-	font-size: 14px;
-	line-height: 1.5;
-	border-right: 1px solid #ccc;
-	user-select: none;
-}
-
 .text-area {
 	flex: 1;
 	padding: 10px;
