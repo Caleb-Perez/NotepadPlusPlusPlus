@@ -12,6 +12,7 @@ import * as monaco from "monaco-editor";
 import { appWindow } from "@tauri-apps/api/window";
 import { Language, LanguageContext } from "../menus/LanguageMenu";
 import logo from "../assets/logo.png";
+import WindowControls from "./WindowControls";
 
 interface TabProps {
 	id: string;
@@ -288,6 +289,7 @@ const TabsBar: React.FC = () => {
 		}
 	}, [language]);
 	return (
+	
 		<div className="editor-tabs">
 			<img src={logo} alt="Logo" className="logo" />
 			{tabs.map((tab) => (
@@ -305,6 +307,8 @@ const TabsBar: React.FC = () => {
 				+
 			</div>
 		</div>
+		
+	
 	);
 };
 

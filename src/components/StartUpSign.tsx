@@ -1,3 +1,12 @@
+/*
+Resource used:
+
+Description: creating a responsive popup
+Author: Codingflag
+Date: July 1, 2022
+URL: https://www.youtube.com/watch?v=Z4XXA89mTy8&t=531s
+*/
+
 import { render } from "@testing-library/react";
 import { type } from "@testing-library/user-event/dist/type";
 import React, { useRef, useState } from "react";

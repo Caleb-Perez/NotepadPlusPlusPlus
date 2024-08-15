@@ -1,3 +1,19 @@
+/*
+Resource used:
+
+Description: Monaco editor setTheme
+Author: Stack Overflow/
+Date: May 9, 2018
+URL: https://stackoverflow.com/questions/47393659/monaco-editor-settheme-is-not-a-function
+
+Description: background color in monaco editer 
+Author: Stack Overflow/
+Date: May 18, 2023
+URL: https://stackoverflow.com/questions/47393659/monaco-editor-settheme-is-not-a-function
+
+
+*/
+
 import React, {
 	useRef,
 	useEffect,
