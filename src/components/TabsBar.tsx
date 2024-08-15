@@ -6,7 +6,7 @@ import { text } from "stream/consumers";
 import { invoke } from "@tauri-apps/api";
 import { open } from "@tauri-apps/api/dialog";
 import { save } from "@tauri-apps/api/dialog";
-import { message } from '@tauri-apps/api/dialog';
+import { message } from "@tauri-apps/api/dialog";
 import { Editor, loader, OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { appWindow } from "@tauri-apps/api/window";
@@ -70,12 +70,13 @@ const TabsBar: React.FC = () => {
 		}
 		if ((event.ctrlKey || event.metaKey) && event.key === "s") {
 			event.preventDefault();
-			const saveOk = await invoke("check_valid_path", {tabId: parseInt(activeTab)});
+			const saveOk = await invoke("check_valid_path", {
+				tabId: parseInt(activeTab),
+			});
 			let filepath;
 			if (saveOk === true) {
-				filepath = await invoke("get_filepath", {tabId: parseInt(activeTab)});
-			}
-			else {
+				filepath = await invoke("get_filepath", { tabId: parseInt(activeTab) });
+			} else {
 				filepath = await save({
 					filters: [
 						{
@@ -90,10 +91,11 @@ const TabsBar: React.FC = () => {
 					tabId: parseInt(activeTab),
 					filePath: filepath,
 				});
-				console.log("ctrl+S pressed, tab " + activeTab + " saved to: " + filepath);
+				console.log(
+					"ctrl+S pressed, tab " + activeTab + " saved to: " + filepath
+				);
 				await message("file saved to: " + filepath);
-			}
-			else {
+			} else {
 				console.log("ctrl+S pressed, no file selected");
 			}
 		}
@@ -109,26 +111,24 @@ const TabsBar: React.FC = () => {
 			let tabid = await spawnTabFile(path); // create tab in back end with path
 			if (tabid) {
 				const newTab: TabProps = {
-					label: `Tab ${tabid.toString()}`,
+					label: `${path}`,
 					id: tabid.toString(),
 					className: "tab",
-					content: await invoke("get_content", {tabId: tabid}),
+					content: await invoke("get_content", { tabId: tabid }),
 				};
 
 				setTabs((prevTabs) => [...prevTabs, newTab]);
 				setActiveTab(newTab.id);
 				setNextID(tabid);
 				console.log("tab created with path: " + path);
-			}
-			else {
+			} else {
 				console.log("error creating tab with path: " + path);
 			}
-		}
-		else {
+		} else {
 			let tabid = await spawnTab(); // create new tab in back end
 			if (tabid) {
 				const newTab: TabProps = {
-					label: `Tab ${tabid.toString()}`,
+					label: `New Tab`,
 					id: tabid.toString(),
 					className: "tab",
 					content: "",
@@ -137,8 +137,7 @@ const TabsBar: React.FC = () => {
 				setActiveTab(newTab.id);
 				setNextID(tabid);
 				console.log("tab created");
-			}
-			else {
+			} else {
 				console.log("error creating tab");
 			}
 		}
@@ -160,17 +159,17 @@ const TabsBar: React.FC = () => {
 
 			// textAreaRef.current.onDidChangeModelContent( async () => {
 			// 	if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-            //         console.log(
-            //             `Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
-            //         );
-            //         await invoke("update_tab_content", {
-            //             tabId: parseInt(activeTab),
-            //             content: textAreaRef.current.getValue(),
-            //         });
-            //         atab.content = textAreaRef.current.getValue();
+			//         console.log(
+			//             `Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
+			//         );
+			//         await invoke("update_tab_content", {
+			//             tabId: parseInt(activeTab),
+			//             content: textAreaRef.current.getValue(),
+			//         });
+			//         atab.content = textAreaRef.current.getValue();
 			// 		setContentChangeDisposable
-            //     }
-            // })
+			//     }
+			// })
 
 			setContentChangeDisposable(
 				textAreaRef.current.onDidChangeModelContent(() => {
@@ -179,9 +178,9 @@ const TabsBar: React.FC = () => {
 							`Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
 						);
 						invoke("update_tab_content", {
-                            tabId: parseInt(activeTab),
-                            content: textAreaRef.current.getValue(),
-                        });
+							tabId: parseInt(activeTab),
+							content: textAreaRef.current.getValue(),
+						});
 						atab.content = textAreaRef.current.getValue();
 					}
 				})
@@ -216,7 +215,7 @@ const TabsBar: React.FC = () => {
 	// };
 
 	const deleteTab = async (id: string) => {
-		await invoke("remove_tab", {tabId: parseInt(id)}); // remove tab from back end
+		await invoke("remove_tab", { tabId: parseInt(id) }); // remove tab from back end
 		if (tabs.length == 1) {
 			appWindow.close();
 		}
@@ -282,6 +281,12 @@ const TabsBar: React.FC = () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [tabs, activeTab]);
+
+	useEffect(() => {
+		if (tabs.length == 0) {
+			addTab();
+		}
+	}, []);
 
 	return (
 		<div className="editor-tabs">
