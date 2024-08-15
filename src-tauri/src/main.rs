@@ -13,6 +13,7 @@ use std::io::Write;
 use serde::Serialize;
 use serde::Deserialize;
 use thiserror::Error;
+use std::path::Path;
 
 // custom error type that implements serde::Serialize
 #[derive(Debug, thiserror::Error)]
@@ -96,7 +97,7 @@ impl TabManager {
             title,
             content,
             is_dirty: false,
-            file: String::new(),
+            file: file_path.to_string(),
         });
         Ok(id)
     }
@@ -156,6 +157,38 @@ impl TabManager {
         }
         Ok(())
     }
+
+    // meant for use with ctrl+s handler. Checks if pre-saved file path is okay to write to
+    fn check_valid_path(&mut self, tab_id: usize) -> bool {
+        if let Some(tab) = self.tabs.iter_mut().find(|t| t.id == tab_id) {
+            let path = Path::new(&tab.file);
+
+            // check file still exists and wasn't somehow changed to a directory
+            if !path.exists() || !path.is_file() {
+                return false;
+            }
+        
+            // Check if said file can be written to the same way save_to_file does
+            return match fs::OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(path) {
+                Ok(_) => true,
+                Err(_) => false,
+            };
+        };
+        false
+    }
+
+    fn get_filepath(&self, tab_id: usize) -> String {
+        if let Some(tab) = self.tabs.iter().find(|t| t.id == tab_id) {
+            tab.file.clone()
+        } else {
+            String::new()
+        }
+    }
+    
 }
 
 // the following are all just wrappers for the tab manager functions. These are what the front end calls
@@ -205,6 +238,18 @@ fn add_tab_file(state: State<'_, Mutex<TabManager>>, title: String, file_path: S
 fn get_content(state: State<'_, Mutex<TabManager>>, tab_id: usize) -> String {
     let mut manager = state.lock().unwrap();
     return manager.get_content(tab_id)
+}
+
+#[tauri::command]
+fn check_valid_path(state: State<'_, Mutex<TabManager>>, tab_id: usize) -> bool {
+    let mut manager = state.lock().unwrap();
+    return manager.check_valid_path(tab_id);
+}
+
+#[tauri::command]
+fn get_filepath(state: State<'_, Mutex<TabManager>>, tab_id: usize) -> String {
+    let mut manager = state.lock().unwrap();
+    return manager.get_filepath(tab_id)
 }
 
 // greet command for random testing
@@ -278,7 +323,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             greet, find_and_replace, save_str, foo,
             add_tab, remove_tab, switch_tab, update_tab_content,
-            save_to_file, add_tab_file, get_content
+            save_to_file, add_tab_file, get_content, check_valid_path, get_filepath
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
