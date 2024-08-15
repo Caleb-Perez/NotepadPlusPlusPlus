@@ -21,6 +21,10 @@ interface TabProps {
 	lang: Language;
 }
 
+function getFileName(filePath: string) {
+	return filePath.split(/[/\\]/).pop();
+}
+
 async function spawnTab() {
 	try {
 		const value: number = await invoke("add_tab", {
@@ -114,8 +118,9 @@ const TabsBar: React.FC = () => {
 		if (path) {
 			let tabid = await spawnTabFile(path); // create tab in back end with path
 			if (tabid) {
+				console.log(getFileName(path));
 				const newTab: TabProps = {
-					label: `${path}`,
+					label: `${getFileName(path)}`,
 					id: tabid.toString(),
 					className: "tab",
 					content: await invoke("get_content", { tabId: tabid }),
@@ -123,12 +128,16 @@ const TabsBar: React.FC = () => {
 				};
 				if (newTab.label.includes(".py")) {
 					newTab.lang = Language.Python;
+					setLanguage(Language.Python);
 				} else if (newTab.label.includes(".cpp")) {
 					newTab.lang = Language.CPlusPlus;
+					setLanguage(Language.CPlusPlus);
 				} else if (newTab.label.includes(".js")) {
 					newTab.lang = Language.JavaScript;
+					setLanguage(Language.JavaScript);
 				} else if (newTab.label.includes(".java")) {
 					newTab.lang = Language.Java;
+					setLanguage(Language.Java);
 				}
 				setTabs((prevTabs) => [...prevTabs, newTab]);
 				setActiveTab(newTab.id);
@@ -151,6 +160,7 @@ const TabsBar: React.FC = () => {
 				setActiveTab(newTab.id);
 				setNextID(tabid);
 				console.log("tab created");
+				setLanguage(Language.None);
 			} else {
 				console.log("error creating tab");
 			}
@@ -276,7 +286,7 @@ const TabsBar: React.FC = () => {
 		if (atab) {
 			atab.lang = language;
 		}
-	}, [LanguageContext]);
+	}, [language]);
 	return (
 		<div className="editor-tabs">
 			<img src={logo} alt="Logo" className="logo" />
