@@ -166,7 +166,7 @@ main {
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	font-size: 2.5vw;
+	font-size: 1.5rem;
 	font-weight: 440;
 	margin-top: 5%;
 	padding: 10px 20px;
@@ -177,6 +177,27 @@ main {
 	box-shadow: 0px 3px 7px  rgba(0, 0, 0, 0.2);
 	
 }
+
+
+@media (min-width: 768px) {
+	.buttons button {
+		font-size: 1.5rem;
+		padding: 10px 20px;
+		max-width: 400px;
+		min-width: 250px;
+	}
+}
+
+@media (min-width: 480px) {
+	.buttons button {
+		font-size: 1.5rem;
+		padding: 10px 20px;
+		max-width: 280px;
+		min-width: 150px;
+	}
+}
+
+
 /*.buttons button {
 	background-color: #a7a7a7;
 	border: none;
