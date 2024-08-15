@@ -189,7 +189,7 @@ export const TextBox: React.FC = () => {
 				inherit: true,
 				rules: [],
 				colors: {
-					'editor.background': '#1c1c1c',
+					'editor.background': '#1a1e1f',
 				},
 			});
 			monacoInstance.editor.setTheme('myTheme');
@@ -202,7 +202,7 @@ export const TextBox: React.FC = () => {
 	}
 		
 	return (
-
+        
 		<Editor
 		    theme = "myTheme"
 			height="90vh"

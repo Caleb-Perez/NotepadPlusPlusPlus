@@ -50,7 +50,7 @@ const StartUpSign: React.FC = () => {
 				</div>
 				<div className="buttons">
 					<button id="open-file" onClick={openFileBrowser}>
-						<FolderLogo /> <span className="open">Open file</span>
+						<FolderLogo /> <span className="open">Open File</span>
 					</button>
 					{/*if "style = {{display: 'none'}}" is removed, the file browser wont open but you can drag a file and it will work. Still in progress*/}
 					<input
