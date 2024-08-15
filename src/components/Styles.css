@@ -163,15 +163,17 @@ main {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	text-align: center;
 	font-size: 2.5vw;
-	font-weight: 450;
+	font-weight: 440;
 	margin-top: 5%;
-	padding: 2%;
-	height: 90px;
-	width: 350px;
+	padding: 10px 20px;
+	height: 85px;
+	width: 340px;
 	min-width: 20%;
 	max-width: 80%;
+	box-shadow: 0px 3px 7px  rgba(0, 0, 0, 0.2);
 	
 }
 /*.buttons button {
@@ -195,6 +197,7 @@ main {
 
 button .icon {
 	margin-right: 20px;
+	font-size: 1.5em;
 }
 
 button:hover {
@@ -202,21 +205,25 @@ button:hover {
 }
 
 .plus {
-	font-size: 110px;
-	margin-right: 20px;
+	font-size: 2em;
+	
 }
 
 @keyframes popup-animation {
-	from { 
-		opacity: 1;
-		transform: scale(0.8);
-
+	from {
+		opacity: 0;
+		transform: translateY(50px) ;
 	}
 	to {
-		opacity: 1;
-		transform: scale(1);
+		opacity: 0.5;
+		transform: translateY(0) ;
 	}
 }
+
+
+
+
+
 .pop-up {
 	width: 500px;
 	background: #fff;
@@ -233,25 +240,22 @@ button:hover {
 	transform: 0.4s, top 0.4s;
 	justify-content: center;
 	flex-direction: column;
-	box-shadow: 0px 2px 5px 5px rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 2px 5px  rgba(0, 0, 0, 0.1);
 	background: linear-gradient(to bottom right, #ffffff, #e0e0e0);
+
 }
 
-
-
-
 .open-popup {
-	z-index: 2;
 	position: fixed;
 	visibility: visible;
-	top: 50%;
+	top: -400px;
 	transform: translate(-50%, -50%) scale(1);
 	top:50%;
 	left:50%;
 	padding: 55px;
 	box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
 	border-radius: 15px;
-	animation: popup-animation 0.2s ease-out;
+	animation: popup-animation 0.4s ease-in-out ;
 }
 
 .link-button-pop-up {
@@ -339,6 +343,7 @@ textarea {
 	font-weight: 250;
 	color: #ffffff;
 	font-family: Arial, Helvetica, sans-serif;
+	text-shadow: 0px 2px 5px rgba(0,0,0,0.3);
 }
 
 /*
