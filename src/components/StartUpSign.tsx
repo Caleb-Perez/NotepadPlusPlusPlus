@@ -5,6 +5,12 @@ Description: creating a responsive popup
 Author: Codingflag
 Date: July 1, 2022
 URL: https://www.youtube.com/watch?v=Z4XXA89mTy8&t=531s
+
+Description: used this site as reference for the file open button
+Author: SandBox/Jkdesai199
+Date: unknown
+URL: https://codesandbox.io/p/sandbox/react-open-file-browser-on-click-a-div-h2tbx
+
 */
 
 import { render } from "@testing-library/react";
