@@ -325,7 +325,6 @@ button:hover {
 	bottom: 0;
 	width: 100%;
 }
-/* #HERERERERE */
 
 .edit-bar {
 	display: flex;
@@ -344,25 +343,12 @@ button:hover {
 	margin: 0 10px;
 }
 
-textarea {
-	border: none;
-	overflow: auto;
-	outline: none;
-	display: fixed;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	resize: none; /*remove the resize handle on the bottom right*/
-	tab-size: 4;
-}
-
 .open {
 	margin-left: 35px;
 }
 
 .welcome-text h1 {
 	margin: auto;
-	/* font-size: 300; */
 	font-style: italic;
 	font-weight: 250;
 	color: #ffffff;

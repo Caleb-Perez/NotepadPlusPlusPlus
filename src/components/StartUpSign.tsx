@@ -13,13 +13,8 @@ URL: https://codesandbox.io/p/sandbox/react-open-file-browser-on-click-a-div-h2t
 
 */
 
-import { render } from "@testing-library/react";
-import { type } from "@testing-library/user-event/dist/type";
 import React, { useRef, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import { readBuilderProgram } from "typescript";
-import PopUp from "./PopUp";
 import { ReactComponent as FolderLogo } from "../assets/folder.svg";
 
 type StartUpSignProps = {
@@ -75,7 +70,6 @@ const StartUpSign: React.FC = () => {
 					<button id="create-new" onClick={() => setPopUp(true)}>
 						<span className="icon">
 							<span className="plus">+</span>
-							{/*➕*/}
 						</span>{" "}
 						Create New
 					</button>

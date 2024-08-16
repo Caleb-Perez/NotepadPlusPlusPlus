@@ -84,17 +84,9 @@ export const TextBox: React.FC = () => {
 				editorRef.current = editor;
 			}
 
-			// editor.onDidChangeModelContent(() => {
-			// 	console.log("Editor content changed");
-			// 	console.log(editor.getValue());
-			// });
-
 			// Example: Add event listener for cursor position changes
 			editor.onDidChangeCursorPosition(() => {
 				const position = editor.getPosition();
-				// console.log(
-				// 	`Cursor moved to line ${position?.lineNumber}, column ${position?.column}`
-				// );
 			});
 		}
 	};

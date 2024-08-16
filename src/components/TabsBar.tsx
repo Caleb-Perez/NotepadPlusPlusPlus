@@ -1,18 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import Tab from "./Tab";
-// import { TabProps } from "./Tab";
 import { useTextBox } from "./Textbox";
-import { text } from "stream/consumers";
 import { invoke } from "@tauri-apps/api";
 import { open } from "@tauri-apps/api/dialog";
 import { save } from "@tauri-apps/api/dialog";
 import { message } from "@tauri-apps/api/dialog";
-import { Editor, loader, OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { appWindow } from "@tauri-apps/api/window";
 import { Language, LanguageContext } from "../menus/LanguageMenu";
 import logo from "../assets/logo.png";
-import WindowControls from "./WindowControls";
 
 interface TabProps {
 	id: string;
@@ -33,9 +29,7 @@ async function spawnTab() {
 			content: "",
 		});
 		return value;
-	} catch (error) {
-		console.error("Error fetching next ID:", error);
-	}
+	} catch (error) {}
 }
 
 async function spawnTabFile(path: string) {
@@ -75,7 +69,6 @@ const TabsBar: React.FC = () => {
 			if (typeof selected === "string") {
 				addTab(selected);
 			}
-			console.log("ctrl+O pressed");
 		}
 		if ((event.ctrlKey || event.metaKey) && event.key === "s") {
 			event.preventDefault();
@@ -100,18 +93,13 @@ const TabsBar: React.FC = () => {
 					tabId: parseInt(activeTab),
 					filePath: filepath,
 				});
-				console.log(
-					"ctrl+S pressed, tab " + activeTab + " saved to: " + filepath
-				);
 				await message("file saved to: " + filepath);
 			} else {
-				console.log("ctrl+S pressed, no file selected");
 			}
 		}
 		if ((event.ctrlKey || event.metaKey) && event.key === "t") {
 			event.preventDefault();
 			await addTab();
-			console.log("ctrl+T pressed");
 		}
 	};
 
@@ -119,7 +107,6 @@ const TabsBar: React.FC = () => {
 		if (path) {
 			let tabid = await spawnTabFile(path); // create tab in back end with path
 			if (tabid) {
-				console.log(getFileName(path));
 				const newTab: TabProps = {
 					label: `${getFileName(path)}`,
 					id: tabid.toString(),
@@ -143,9 +130,7 @@ const TabsBar: React.FC = () => {
 				setTabs((prevTabs) => [...prevTabs, newTab]);
 				setActiveTab(newTab.id);
 				setNextID(tabid);
-				console.log("tab created with path: " + path);
 			} else {
-				console.log("error creating tab with path: " + path);
 			}
 		} else {
 			let tabid = await spawnTab(); // create new tab in back end
@@ -160,10 +145,8 @@ const TabsBar: React.FC = () => {
 				setTabs((prevTabs) => [...prevTabs, newTab]);
 				setActiveTab(newTab.id);
 				setNextID(tabid);
-				console.log("tab created");
 				setLanguage(Language.None);
 			} else {
-				console.log("error creating tab");
 			}
 		}
 	};
@@ -185,9 +168,6 @@ const TabsBar: React.FC = () => {
 			setContentChangeDisposable(
 				textAreaRef.current.onDidChangeModelContent(() => {
 					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-						console.log(
-							`Content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
-						);
 						invoke("update_tab_content", {
 							tabId: parseInt(activeTab),
 							content: textAreaRef.current.getValue(),
@@ -224,9 +204,6 @@ const TabsBar: React.FC = () => {
 					if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
 						const atab = tabs.find((tab) => tab.id === id);
 						if (atab) {
-							console.log(
-								`Bye content for tab ${activeTab} changed to: "${textAreaRef.current.getValue()}"`
-							);
 							atab.content = textAreaRef.current.getValue();
 						}
 					}
@@ -240,16 +217,10 @@ const TabsBar: React.FC = () => {
 
 		setActiveTab(id);
 		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
-			console.log(
-				`Tab ${parseInt(activeTab)} is currently "${
-					tabs.find((tab) => tab.id === activeTab)?.content
-				}"`
-			);
 		}
 		if (textAreaRef && "current" in textAreaRef && textAreaRef.current) {
 			const newActiveTab = tabs.find((tab) => tab.id === id);
 			if (newActiveTab) {
-				// console.log(	// 	`Active tab is currently ${activeTab}, but supposed to be ${id}`			// );
 				textAreaRef.current.setValue(newActiveTab.content);
 			}
 		}
@@ -282,14 +253,12 @@ const TabsBar: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log(`Tab ${activeTab} lang changed to ${language}`);
 		const atab = tabs.find((tab) => tab.id === activeTab);
 		if (atab) {
 			atab.lang = language;
 		}
 	}, [language]);
 	return (
-	
 		<div className="editor-tabs">
 			<img src={logo} alt="Logo" className="logo" />
 			{tabs.map((tab) => (
