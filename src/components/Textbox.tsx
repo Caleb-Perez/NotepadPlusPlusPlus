@@ -10,8 +10,6 @@ Description: background color in monaco editer
 Author: Stack Overflow/
 Date: May 18, 2023
 URL: https://stackoverflow.com/questions/47393659/monaco-editor-settheme-is-not-a-function
-
-
 */
 
 import React, {
@@ -22,7 +20,6 @@ import React, {
 	useContext,
 	useState,
 } from "react";
-import { EndOfLineState } from "typescript";
 import { Editor, loader, OnMount } from "@monaco-editor/react";
 import * as monacoEditor from "monaco-editor";
 

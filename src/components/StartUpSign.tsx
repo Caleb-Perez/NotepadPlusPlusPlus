@@ -39,11 +39,9 @@ const StartUpSign: React.FC = () => {
 		if (files) {
 			const file = files[0];
 			const reader = new FileReader();
-			//const fileRef = storageRef.child(file);
 			reader.onload = (e) => {
 				const fileContent = e.target?.result as string;
 				console.log("File content:", fileContent);
-
 				window.location.href = "/edit"; //will fix later
 			};
 			reader.readAsText(file);
@@ -61,7 +59,6 @@ const StartUpSign: React.FC = () => {
 					<button id="open-file" onClick={openFileBrowser}>
 						<FolderLogo /> <span className="open">Open File</span>
 					</button>
-					{/*if "style = {{display: 'none'}}" is removed, the file browser wont open but you can drag a file and it will work. Still in progress*/}
 					<input
 						ref={inputFile}
 						accept=".txt,.cpp,.py,.js"

@@ -307,8 +307,6 @@ const TabsBar: React.FC = () => {
 				+
 			</div>
 		</div>
-		
-	
 	);
 };
 
